@@ -17,7 +17,7 @@ int main()
         DEBUG_MSG("Input particles: " << pt.prettyOutput());
     }
     DEBUG_MSG("================================================================================");
-    SlowJet::JetDefinition::instance()->setBeta(12.0);
+    SlowJet::JetDefinition::instance()->setBeta(15.0);
     SlowJet::JetFinder jf(input_particles);
     SlowJet::JetList jets = jf.jets();
     int count = 0;
