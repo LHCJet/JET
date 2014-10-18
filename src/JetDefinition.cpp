@@ -1,5 +1,4 @@
 #include "JetDefinition.h"
-#include "Combination.h"
 #include "Debug.h"
 #include <numeric>
 #include <algorithm>
@@ -93,25 +92,24 @@ JetCone JetDefinition::findCone(const Vector & pt1, const Vector & pt2)
 JetConeList JetDefinition::generateCones(VectorList & particles)
 {
     JetConeList cones{};
-    VectorList triplet{};
-    triplet.push_back(particles[0]);
-    triplet.push_back(particles[1]);
-    triplet.push_back(particles[2]);
-    do {
-        JetCone cone = findCone(triplet[0], triplet[1], triplet[2]);
-        if (cone.radius() > m_b) {
-            cones.push_back(cone);
+    for (unsigned int i = 0; i < particles.size() - 2; i++) {
+        for (unsigned int j = i+1; j < particles.size() - 1; j++) {
+            for (unsigned int k = j+1; k < particles.size(); k++) {
+                JetCone cone = findCone(particles[i], particles[j], particles[k]);
+                if (cone.radius() > m_b) {
+                    cones.push_back(cone);
+                }
+            }
         }
-    } while(stdcomb::next_combination(particles.begin(), particles.end(), triplet.begin(), triplet.end()));
-    VectorList pair{};
-    pair.push_back(particles[0]);
-    pair.push_back(particles[1]);
-    do {
-        JetCone cone = findCone(pair[0], pair[1]);
-        if (cone.radius() > m_b) {
-            cones.push_back(cone);
+    }
+    for (unsigned int i = 0; i < particles.size() - 1; i++) {
+        for (unsigned int j = i+1; j < particles.size(); j++) {
+            JetCone cone = findCone(particles[i], particles[j]);
+            if (cone.radius() > m_b) {
+                cones.push_back(cone);
+            }
         }
-    } while(stdcomb::next_combination(particles.begin(), particles.end(), pair.begin(), pair.end()));
+    }
     return cones;
 }
 

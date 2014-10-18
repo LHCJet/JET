@@ -1,6 +1,5 @@
 #include "JetFinder.h"
 #include "JetDefinition.h"
-#include "Combination.h"
 #include "Debug.h"
 #include <algorithm>
 
@@ -58,16 +57,27 @@ Jet JetFinder::findOneJet()
         subset.insert(subset.end(),b.begin(),b.end());
         protoJet.push_back(Jet(subset));
 
-        VectorList nb(b.size());
-        std::copy(b.begin(), b.end(), nb.begin());
-        nb.pop_back();
-        do {
-            subset.clear();
-            subset.reserve(inner.size() + nb.size());
-            subset.insert(subset.end(),inner.begin(),inner.end());
-            subset.insert(subset.end(),nb.begin(),nb.end());
-            protoJet.push_back(Jet(subset));
-        } while (stdcomb::next_combination(b.begin(), b.end(), nb.begin(), nb.end()));
+        if (b.size() == 3) {
+            for (unsigned int i =0; i < 2; i++) {
+                for (unsigned int j = i+1; j < 3; j++) {
+                    subset.clear();
+                    subset.insert(subset.end(),inner.begin(),inner.end());
+                    subset.push_back(b[i]);
+                    subset.push_back(b[j]);
+                    protoJet.push_back(Jet(subset));
+
+                }
+            }
+        } else if (b.size() == 2) {
+            for (unsigned int i = 0; i < 2; i++) {
+                subset.clear();
+                subset.insert(subset.end(),inner.begin(),inner.end());
+                subset.push_back(b[i]);
+                protoJet.push_back(Jet(subset));
+            }
+        } else {
+            DEBUG_MSG("The boundary contains: " << b.size() << " particles. Something is wrong!");
+        }
     }
     std::sort(protoJet.begin(), protoJet.end(), [](const Jet & a, const Jet & b){
         return a.jetFunction() < b.jetFunction();
