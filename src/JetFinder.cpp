@@ -61,6 +61,7 @@ Jet JetFinder::findOneJet()
         Jet protoJet(subset);
         if (protoJet.jetFunction() > maxJetFunction) {
             jet = protoJet;
+            maxJetFunction = jet.jetFunction();
         }
 
         if (b.size() == 3) {
@@ -73,6 +74,7 @@ Jet JetFinder::findOneJet()
                     Jet protoJet(subset);
                     if (protoJet.jetFunction() > maxJetFunction) {
                         jet = protoJet;
+                        maxJetFunction = jet.jetFunction();
                     }
                 }
             }
@@ -84,6 +86,7 @@ Jet JetFinder::findOneJet()
                 Jet protoJet(subset);
                 if (protoJet.jetFunction() > maxJetFunction) {
                     jet = protoJet;
+                    maxJetFunction = jet.jetFunction();
                 }
             }
         } else {
