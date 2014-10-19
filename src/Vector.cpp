@@ -22,7 +22,7 @@ std::string Vector::prettyOutput() const
 {
     std::ostringstream stringStream;
     stringStream.precision(10);
-    stringStream  << m_p[0] << ' ' << m_p[1] << ' ' << m_p[2] << ' ' << m_p[3];
+    stringStream  << eta() << ' ' << phi() << ' ' << pt();// << ' ' << m_p[3];
     return stringStream.str();
 }
 

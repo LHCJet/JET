@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <algorithm>
 
 int main()
 {
@@ -31,9 +32,14 @@ int main()
     SlowJet::JetFinder jf(input_particles);
     SlowJet::JetList jets = jf.jets();
     int count = 0;
+    std::sort(jets.begin(),jets.end(),[](const SlowJet::Jet & a, const SlowJet::Jet & b){
+            return a.jet().pt() > b.jet().pt(); // Descendent sorting
+    });
     for (auto jet : jets) {
-        std::cout << count << ' ' <<  jet.jet().prettyOutput() << ' ' << jet.content().size() << std::endl;
-        count++;
+        if (jet.jet().pt() > 5) {
+            std::cout << count << ' ' <<  jet.jet().prettyOutput() << ' ' << jet.content().size() << std::endl;
+            count++;
+        }
     }
     //SlowJet::JetConeList cones = SlowJet::JetDefinition::instance()->generateCones(input_particles);
     //for (auto cone : cones) {
