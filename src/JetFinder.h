@@ -17,7 +17,7 @@ public:
         m_jet = Vector(jetP[0], jetP[1], jetP[2], jetP[3]);
         m_jetFunction = JetDefinition::instance()->jetFunction(jetP);
     }
-
+    Jet() : m_jet{}, m_content{}, m_jetFunction(0) {}
     ~Jet() {}
     const Vector & jet() const {return m_jet;}
     const VectorList & content() const {return m_content;}

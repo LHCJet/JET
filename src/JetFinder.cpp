@@ -33,13 +33,15 @@ JetList JetFinder::jets()
 
 Jet JetFinder::findOneJet()
 {
-    JetList protoJet{};
+    Jet jet;
     if (m_cones.empty()) {
         VectorList pt{m_particles.back()};
         m_particles.pop_back();
         Jet single(pt);
         return single;
     }
+
+    double maxJetFunction = -100000;
 
     for (auto cone : m_cones) {
         Vector c = cone.center();
@@ -50,12 +52,16 @@ Jet JetFinder::findOneJet()
             return JetDefinition::instance()->zt(c, pt) > r and std::find(b.begin(),b.end(), pt) == b.end();
         });
         inner.resize(std::distance(inner.begin(), it));
+        DEBUG_MSG(inner.size() << " particles inside this cone");
 
         VectorList subset{};
         subset.reserve(inner.size() + b.size());
         subset.insert(subset.end(),inner.begin(),inner.end());
         subset.insert(subset.end(),b.begin(),b.end());
-        protoJet.push_back(Jet(subset));
+        Jet protoJet(subset);
+        if (protoJet.jetFunction() > maxJetFunction) {
+            jet = protoJet;
+        }
 
         if (b.size() == 3) {
             for (unsigned int i =0; i < 2; i++) {
@@ -64,8 +70,10 @@ Jet JetFinder::findOneJet()
                     subset.insert(subset.end(),inner.begin(),inner.end());
                     subset.push_back(b[i]);
                     subset.push_back(b[j]);
-                    protoJet.push_back(Jet(subset));
-
+                    Jet protoJet(subset);
+                    if (protoJet.jetFunction() > maxJetFunction) {
+                        jet = protoJet;
+                    }
                 }
             }
         } else if (b.size() == 2) {
@@ -73,16 +81,16 @@ Jet JetFinder::findOneJet()
                 subset.clear();
                 subset.insert(subset.end(),inner.begin(),inner.end());
                 subset.push_back(b[i]);
-                protoJet.push_back(Jet(subset));
+                Jet protoJet(subset);
+                if (protoJet.jetFunction() > maxJetFunction) {
+                    jet = protoJet;
+                }
             }
         } else {
             DEBUG_MSG("The boundary contains: " << b.size() << " particles. Something is wrong!");
         }
     }
-    std::sort(protoJet.begin(), protoJet.end(), [](const Jet & a, const Jet & b){
-        return a.jetFunction() < b.jetFunction();
-     });
-    return protoJet.back();
+    return jet;
 }
 
 }
