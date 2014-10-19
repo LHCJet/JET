@@ -21,7 +21,13 @@ public:
         return 0.5*log((pAbs+m_p[2])/(pAbs-m_p[2]));
     }
     const double y() const { return 0.5*log((m_p[3]+m_p[2])/(m_p[3]-m_p[2])); }
-    const double phi() const { return atan2(m_p[1],m_p[0]); }
+    const double phi() const {
+        double arg = atan2(m_p[1],m_p[0]);
+        if (arg < 0) {
+            arg += 2*M_PI;
+        }
+        return arg;
+    }
     const PArray & normalizedFourVector() const {return m_p_normalized;}
     bool operator == (const Vector & d) const {
         return m_p == d.fourVector();
