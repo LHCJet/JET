@@ -35,11 +35,24 @@ int main()
     std::sort(jets.begin(),jets.end(),[](const SlowJet::Jet & a, const SlowJet::Jet & b){
             return a.jet().pt() > b.jet().pt(); // Descendent sorting
     });
-    for (auto jet : jets) {
-        if (jet.jet().pt() > 5) {
-            std::cout << count << ' ' <<  jet.jet().prettyOutput() << ' ' << jet.content().size() << std::endl;
-            count++;
+    for (unsigned i = 0; i < jets.size(); i++) {
+        if (jets[i].jet().pt() < 5) {
+            continue;
         }
+        SlowJet::PArray p = jets[i].jet().fourVector();
+        std::cout  << i  << " "
+             << p[0] << " "
+             << p[1] << " "
+             << p[2] << " "
+             << p[3] << std::endl;
+        SlowJet::VectorList cst = jets[i].content();
+        for (unsigned j = 0; j < cst.size() ; j++) {
+            std::cout << " " << j << " "
+               << cst[j].y() << " "
+               << cst[j].phi() << " "
+               << cst[j].pt() << std::endl;
+        }
+        std::cout << "#END" << std::endl;
     }
     //SlowJet::JetConeList cones = SlowJet::JetDefinition::instance()->generateCones(input_particles);
     //for (auto cone : cones) {
