@@ -93,9 +93,18 @@ JetCone JetDefinition::findCone(const Vector & pt1, const Vector & pt2)
 JetConeList JetDefinition::generateCones(VectorList & particles)
 {
     JetConeList cones{};
+    double cos2th = 2*m_b*m_b-1;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
+        PArray pp = particles[i].normalizedFourVector();
+        Vector xp(pp[0],pp[1],cos2th*pp[2],pp[3]);
         for (unsigned int j = i+1; j < particles.size() - 1; j++) {
+            if (zt(xp, particles[j]) < cos2th/sqrt(1-(1-cos2th*cos2th)*pp[2]*pp[2])) {
+                continue;
+            }
             for (unsigned int k = j+1; k < particles.size(); k++) {
+                if (zt(xp, particles[k]) < cos2th/sqrt(1-(1-cos2th*cos2th)*pp[2]*pp[2])) {
+                    continue;
+                }
                 JetCone cone = findCone(particles[i], particles[j], particles[k]);
                 PArray p = cone.center().normalizedFourVector();
                 if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
