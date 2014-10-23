@@ -35,14 +35,23 @@ typedef std::vector<Jet> JetList;
 class JetFinder
 {
 public:
-    JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {}
-    ~JetFinder() {}
+    JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {
+        m_distances = NULL;
+        m_discarded = new int[particles.size()];
+        for (unsigned int i; i < particles.size(); i++) {
+            m_discarded[i] = 1;
+        }
+    }
+    ~JetFinder() {
+    }
     JetList jets();
 private:
     Jet findOneJet();
     Jet protoJet(VectorList subset);
     VectorList m_particles;
     JetConeList m_cones;
+    double ** m_distances;
+    int * m_discarded;
 };
 
 } // namespace SlowJet;

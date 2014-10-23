@@ -15,7 +15,8 @@ public:
     void setBeta(double);
     double beta() const {return m_beta;}
     PArray sumP(const VectorList &);
-    JetConeList generateCones(VectorList &);
+    JetConeList generateCones(const VectorList &, double **);
+    double ** generateDistanceTable(const VectorList &);
 
 private:
     JetDefinition() : m_betaMin(2.0), m_beta(2.0), m_b(0.5) {}

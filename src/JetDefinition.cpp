@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <functional>
 #include <cmath>
+#include <array>
 
 namespace SlowJet {
 
@@ -63,7 +64,7 @@ JetCone JetDefinition::findCone(const Vector & pt1, const Vector & pt2, const Ve
     double pz = (A[1]*(B[0]-C[0])+B[1]*C[0]-B[0]*C[1]+A[0]*(C[1]-B[1]));
     Vector center(px, py, pz, 1.0);
     double radius = zt(center,pt1);
-    cone.setBoundary(VectorList{pt1, pt2, pt3});
+    //cone.setBoundary(VectorList{pt1, pt2, pt3});
     if (radius > 0) {
         cone.setCenter(center);
         cone.setRadius(radius);
@@ -84,45 +85,109 @@ JetCone JetDefinition::findCone(const Vector & pt1, const Vector & pt2)
     double pz = (A[2]+B[2])/2.0;
     Vector center(px, py, pz, 1.0);
     double radius = zt(center,pt1);
-    cone.setBoundary(VectorList{pt1, pt2});
+    //cone.setBoundary(VectorList{pt1, pt2});
     cone.setCenter(center);
     cone.setRadius(radius);
     return cone;
 }
 
-JetConeList JetDefinition::generateCones(VectorList & particles)
+double ** JetDefinition::generateDistanceTable(const VectorList & particles)
+{
+    unsigned int n = particles.size();
+    double ** distances  = new double *[n];
+    double cos2th = 2*m_b*m_b-1;
+    for (unsigned int i = 0; i < n; i++) {
+        distances[i] = new double[n];
+        PArray p = particles[i].normalizedFourVector();
+        Vector v(p[0],p[1],p[2]*cos2th, p[3]);
+        for (unsigned int j = 0; j < n; j++) {
+            if (zt(v, particles[j]) > cos2th/sqrt(1-(1-cos2th*cos2th)*p[2]*p[2])) {
+                distances[i][j] = zt(particles[i],particles[j]);
+            } else {
+                distances[i][j] = -1.0;
+            }
+            //printf ("%f ", distances[i][j]);
+        }
+        //printf ("\n");
+    }
+    return distances;
+}
+
+JetConeList JetDefinition::generateCones(const VectorList & particles, double ** distances)
 {
     JetConeList cones{};
     double cos2th = 2*m_b*m_b-1;
+    generateDistanceTable(particles);
+    //std::cout << cos2th << std::endl;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
+        unsigned int count_n =0;
+        unsigned int count_n2 =0;
         PArray pp = particles[i].normalizedFourVector();
         Vector xp(pp[0],pp[1],cos2th*pp[2],pp[3]);
         for (unsigned int j = i+1; j < particles.size() - 1; j++) {
-            if (zt(xp, particles[j]) < cos2th/sqrt(1-(1-cos2th*cos2th)*pp[2]*pp[2])) {
+            if (distances[i][j] < 0) {
                 continue;
             }
+            count_n++;
             for (unsigned int k = j+1; k < particles.size(); k++) {
-                if (zt(xp, particles[k]) < cos2th/sqrt(1-(1-cos2th*cos2th)*pp[2]*pp[2])) {
+                if (distances[i][k] < 0 or distances[j][k] < 0) {
                     continue;
                 }
+                //if (zt(particles[j], particles[k]) < sqrt(1+(1/cos2th/cos2th-1)*pp[2]*pp[2])*cos2th) {
+                //    continue;
+                //}
                 JetCone cone = findCone(particles[i], particles[j], particles[k]);
-                PArray p = cone.center().normalizedFourVector();
+                Vector c = cone.center();
+                PArray p = c.normalizedFourVector();
                 if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
+                    for (unsigned int l = 0; l < particles.size(); l++) {
+                        if (l == i or l == j or l == k) {
+                            continue;
+                        }
+                        if (distances[i][l] < 0) {
+                            continue;
+                        }
+                        if (zt(c, particles[l]) <= cone.radius()) {
+                            cone.addIndex(l);
+                        }
+                    }
+                    cone.setBoundary (std::vector<unsigned int > {i,j,k});
                     cones.push_back(cone);
+                    DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
+                    //count_n2++;
                 }
             }
         }
+//        std::cout << count_n << " particles in the fiducial region." << std::endl;
     }
     for (unsigned int i = 0; i < particles.size() - 1; i++) {
         for (unsigned int j = i+1; j < particles.size(); j++) {
+            if (distances[i][j] < 0) {
+                continue;
+            }
             JetCone cone = findCone(particles[i], particles[j]);
-            PArray p = cone.center().normalizedFourVector();
+            Vector c = cone.center();
+            PArray p = c.normalizedFourVector();
             if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
+                for (unsigned int l = 0; l < particles.size(); l++) {
+                    if (l == i or l == j) {
+                        continue;
+                    }
+                    if (distances[i][l] < 0) {
+                        continue;
+                    }
+                    if (zt(c, particles[l]) <= cone.radius()) {
+                        cone.addIndex(l);
+                    }
+                }
+                cone.setBoundary (std::vector<unsigned int > {i,j});
                 cones.push_back(cone);
+                DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
             }
         }
     }
-    DEBUG_MSG(cones.size() << " cones generated!");
+    //DEBUG_MSG(cones.size() << " cones generated!");
+    std::cout << cones.size() << " cones generated!" << std::endl;
     return cones;
 }
 

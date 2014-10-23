@@ -7,5 +7,6 @@
 #else
 #define DEBUG_MSG(str) do { } while ( false )
 #endif
+#define MSG(str) do { std::cout << "DEBUG: " << str << std::endl; } while( false )
 
 #endif
