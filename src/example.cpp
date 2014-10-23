@@ -22,11 +22,6 @@ int main()
         linestream >> px >> py >> pz >> E;
         input_particles.push_back(SlowJet::Vector(px,py,pz,E));
     }
-#ifdef DEBUG
-    for (auto pt : input_particles) {
-        DEBUG_MSG("Input particles: " << pt.prettyOutput());
-    }
-#endif
     DEBUG_MSG("================================================================================");
     SlowJet::JetDefinition::instance()->setBeta(15.0);
     SlowJet::JetFinder jf(input_particles);
@@ -45,12 +40,12 @@ int main()
              << p[1] << " "
              << p[2] << " "
              << p[3] << std::endl;
-        SlowJet::VectorList cst = jets[i].content();
+        SlowJet::IndexList cst = jets[i].content();
         for (unsigned j = 0; j < cst.size() ; j++) {
             std::cout << " " << j << " "
-               << cst[j].y() << " "
-               << cst[j].phi() << " "
-               << cst[j].pt() << std::endl;
+               << input_particles[cst[j]].y() << " "
+               << input_particles[cst[j]].phi() << " "
+               << input_particles[cst[j]].pt() << std::endl;
         }
         std::cout << "#END" << std::endl;
     }

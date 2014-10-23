@@ -8,7 +8,7 @@ namespace SlowJet {
 
 class JetCone {
 public:
-    JetCone() : m_boundary{}, m_center{}, m_radius(0), m_indices{}, m_jetFunction(-100000), m_keep(-1), m_discarded(false) {}
+    JetCone() : m_boundary{}, m_center{}, m_radius(0), m_indices{}, m_jetFunction(-100000), m_keep(-1), m_discarded(false), m_dirty(true) {}
     ~JetCone() {}
     void setBoundary(const std::vector<unsigned int >& b) { m_boundary = b; }
     void setCenter(const Vector & c) { m_center = c; }
@@ -26,9 +26,9 @@ public:
     const std::vector<unsigned int > & indices() const { return m_indices; }
     std::vector<unsigned int > content() const {
         std::vector<unsigned int> res(m_indices);
-        DEBUG_MSG("exclude: " << m_keep);
+        //DEBUG_MSG("exclude: " << m_keep);
         for (unsigned int i = 0; i < m_boundary.size(); i++) {
-            DEBUG_MSG(m_boundary[i]);
+            //DEBUG_MSG(m_boundary[i]);
             if (m_boundary[i] != m_keep) {
                 res.push_back(m_boundary[i]);
             }
@@ -40,7 +40,6 @@ public:
     }
     bool discarded() const {return m_discarded;}
     void discard() {
-        DEBUG_MSG("DISCARD CONE");
         m_discarded = true; }
     bool dirty() const { return m_dirty; }
     void markDirty() { m_dirty = true; }

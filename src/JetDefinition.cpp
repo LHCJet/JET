@@ -36,11 +36,11 @@ double JetDefinition::zt(const Vector & pt1, const Vector & pt2)
     return A[0]*B[0]+A[1]*B[1]+A[2]*B[2];
 }
 
-PArray JetDefinition::sumP(const VectorList & particles)
+PArray JetDefinition::sumP(const IndexList & indices, const VectorList & particles)
 {
     PArray jetP{0,0,0,0};
-    for(auto pt: particles) {
-        PArray p = pt.fourVector();
+    for(auto i: indices) {
+        PArray p = particles[i].fourVector();
         std::transform(p.begin(), p.end(), jetP.begin(), jetP.begin(),
                 std::plus<double>());
     }
@@ -113,12 +113,13 @@ double ** JetDefinition::generateDistanceTable(const VectorList & particles)
     return distances;
 }
 
-JetConeList JetDefinition::generateCones(const VectorList & particles, double ** distances)
+JetConeList JetDefinition::generateCones(VectorList & particles, double ** distances)
 {
     JetConeList cones{};
     double cos2th = 2*m_b*m_b-1;
     generateDistanceTable(particles);
     //std::cout << cos2th << std::endl;
+    unsigned int cone_index = 0;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
         unsigned int count_n =0;
         unsigned int count_n2 =0;
@@ -133,26 +134,26 @@ JetConeList JetDefinition::generateCones(const VectorList & particles, double **
                 if (distances[i][k] < 0 or distances[j][k] < 0) {
                     continue;
                 }
-                //if (zt(particles[j], particles[k]) < sqrt(1+(1/cos2th/cos2th-1)*pp[2]*pp[2])*cos2th) {
-                //    continue;
-                //}
                 JetCone cone = findCone(particles[i], particles[j], particles[k]);
                 Vector c = cone.center();
                 PArray p = c.normalizedFourVector();
                 if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
                     for (unsigned int l = 0; l < particles.size(); l++) {
                         if (l == i or l == j or l == k) {
+                            particles[l].addAssociatedBoundaries(cone_index);
                             continue;
                         }
                         if (distances[i][l] < 0) {
                             continue;
                         }
-                        if (zt(c, particles[l]) <= cone.radius()) {
+                        if (zt(c, particles[l]) >= cone.radius()) {
+                            particles[l].addAssociatedInners(cone_index);
                             cone.addIndex(l);
                         }
                     }
                     cone.setBoundary (std::vector<unsigned int > {i,j,k});
                     cones.push_back(cone);
+                    cone_index++;
                     DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
                     //count_n2++;
                 }
@@ -171,17 +172,20 @@ JetConeList JetDefinition::generateCones(const VectorList & particles, double **
             if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
                 for (unsigned int l = 0; l < particles.size(); l++) {
                     if (l == i or l == j) {
+                        particles[l].addAssociatedBoundaries(cone_index);
                         continue;
                     }
                     if (distances[i][l] < 0) {
                         continue;
                     }
-                    if (zt(c, particles[l]) <= cone.radius()) {
+                    if (zt(c, particles[l]) >= cone.radius()) {
+                        particles[l].addAssociatedInners(cone_index);
                         cone.addIndex(l);
                     }
                 }
                 cone.setBoundary (std::vector<unsigned int > {i,j});
                 cones.push_back(cone);
+                cone_index++;
                 DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
             }
         }

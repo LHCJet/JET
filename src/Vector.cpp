@@ -5,7 +5,7 @@
 namespace SlowJet {
 
 Vector::Vector(const double px, const double py, const double pz, const double E)
-    :m_p{px, py, pz, E}, m_p_normalized{0, 0, 0, 0}
+    :m_p{px, py, pz, E}, m_p_normalized{0, 0, 0, 0}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false)
 {
     m_p[3] = sqrt(px*px+py*py+pz*pz);
     normalizeVector();

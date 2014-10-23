@@ -11,21 +11,21 @@ namespace SlowJet {
 class Jet
 {
 public:
-    Jet(VectorList & c)
+    Jet(IndexList & c, const VectorList & p)
         : m_jet{}, m_content{c}, m_jetFunction(0) {
-        PArray jetP = JetDefinition::instance()->sumP(m_content);
+        PArray jetP = JetDefinition::instance()->sumP(c, p);
         m_jet = Vector(jetP[0], jetP[1], jetP[2], jetP[3]);
         m_jetFunction = JetDefinition::instance()->jetFunction(jetP);
     }
     Jet() : m_jet{}, m_content{}, m_jetFunction(0) {}
     ~Jet() {}
     const Vector & jet() const {return m_jet;}
-    const VectorList & content() const {return m_content;}
+    const IndexList & content() const {return m_content;}
     double jetFunction() const {return m_jetFunction;}
 
 private:
     Vector m_jet;
-    VectorList m_content;
+    IndexList m_content;
     double m_jetFunction;
 
 };
@@ -37,9 +37,9 @@ class JetFinder
 public:
     JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {
         m_distances = NULL;
-        m_discarded = new int[particles.size()];
+        m_particlesRemaining = new int[particles.size()];
         for (unsigned int i; i < particles.size(); i++) {
-            m_discarded[i] = 1;
+            m_particlesRemaining[i] = 1;
         }
     }
     ~JetFinder() {
@@ -51,7 +51,8 @@ private:
     VectorList m_particles;
     JetConeList m_cones;
     double ** m_distances;
-    int * m_discarded;
+    int * m_particlesRemaining;
+    int * m_conesRemaining;
 };
 
 } // namespace SlowJet;

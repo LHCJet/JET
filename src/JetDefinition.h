@@ -14,8 +14,8 @@ public:
     double zt(const Vector &, const Vector &);
     void setBeta(double);
     double beta() const {return m_beta;}
-    PArray sumP(const VectorList &);
-    JetConeList generateCones(const VectorList &, double **);
+    PArray sumP(const IndexList &, const VectorList &);
+    JetConeList generateCones(VectorList &, double **);
     double ** generateDistanceTable(const VectorList &);
 
 private:

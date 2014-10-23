@@ -12,9 +12,19 @@ JetList JetFinder::jets()
     m_distances = JetDefinition::instance()->generateDistanceTable(m_particles);
     m_cones = JetDefinition::instance()->generateCones(m_particles, m_distances);
     DEBUG_MSG("Total number of cones: " << m_cones.size());
+#ifdef DEBUG
+    for (auto pt : m_particles) {
+        DEBUG_MSG("Input particles: " << pt.prettyOutput());
+        for (auto j : pt.associatedBoundaries()) {
+            std::cout << j << " ";
+        }
+        std::cout << std::endl;
+    }
+#endif
     DEBUG_MSG("====================Start Clustering...====================");
     JetList results{};
     int n = 0;
+    int m = 0;
     do {
         Jet j = findOneJet();
         results.push_back(j);
@@ -29,17 +39,33 @@ JetList JetFinder::jets()
 //                DEBUG_MSG("Number of cones left: " << m_cones.size());
 //            }
 //        }
-        m_cones.erase(std::remove_if(m_cones.begin(), m_cones.end(), [&](JetCone & c) {
-            return c.discarded();
-        }), m_cones.end());
         //DEBUG_MSG("Number of cones left: " << m_cones.size());
-        std::cout << m_cones.size() << " cones left" << std::endl;
         n = 0;
-        for (unsigned int i = 0; i < m_particles.size(); i ++) {
-            n += m_discarded[i];
+        m = 0;
+        DEBUG_MSG("===================Remaining Cones==========================");
+        for (unsigned int i = 0; i < m_cones.size(); i++) {
+            if (not m_cones[i].discarded()) {
+//                std::cout << i << ' ' << m_cones[i].jetFunction() << " {";
+//                for (auto j : m_cones[i].boundary()) {
+//                    std::cout << j << ' ';
+//                }
+//                std::cout << '}';
+                n += 1;
+            }
         }
-        DEBUG_MSG(n << " particles left");
+//        std::cout << std::endl;
+//        DEBUG_MSG("===================Remaining Particles==========================");
+//        for (unsigned int i = 0; i < m_particles.size(); i++) {
+//            if (not m_particles[i].discarded()) {
+//                std::cout << i << ' ';
+//                m += 1;
+//            }
+//        }
+//        std::cout << std::endl;
+        //std::cout << n << " cones left" << std::endl;
+        DEBUG_MSG(n << " cones left");
     } while (n > 0);
+    //FIXME: single particle jet;
     return results;
 }
 
@@ -49,10 +75,10 @@ Jet JetFinder::findOneJet()
     if (m_cones.empty()) {
         //FIXME: no cone
         for (unsigned int i = 0; i < m_particles.size(); i++ ) {
-            if (m_discarded[i] > 0) {
-                VectorList pt{m_particles[i]};
-                m_discarded[i] = 0;
-                Jet single(pt);
+            if (m_particlesRemaining[i] > 0) {
+                IndexList ids{i};
+                Jet single(ids, m_particles);
+                m_particlesRemaining[i] = 0;
                 return single;
             }
         }
@@ -64,40 +90,38 @@ Jet JetFinder::findOneJet()
     JetCone jetCone;
     int keep = -1;
     //for (unsigned int i_cone = 0; i_cone < m_cones.size(); i_cone++) {
+    unsigned int n = 0;
     for (auto & cone : m_cones) {
         keep = -1;
+        if (cone.discarded()) {
+            continue;
+        }
         if (cone.dirty()) {
             Vector c = cone.center();
             double r = cone.radius();
-            std::vector<unsigned int > b = cone.boundary();
+            double jf = 0;
+            IndexList b = cone.boundary();
             //VectorList inner(cone.indices().size());
-            VectorList inner{};
-
-            for (unsigned int i = 0; i < cone.indices().size(); i++) {
-                if (m_discarded[cone.indices()[i]] > 0) {
-                    inner.push_back(m_particles[cone.indices()[i]]);
-                }
-            }
+            IndexList inner = cone.indices();
 
             DEBUG_MSG(inner.size() << " particles inside this cone");
 
-            VectorList subset{};
+            IndexList subset{};
             subset.reserve(inner.size() + b.size());
             subset.insert(subset.end(),inner.begin(),inner.end());
-            for (auto i: b) {
-                subset.push_back(m_particles[i]);
-            }
-            Jet protoJet(subset);
+            subset.insert(subset.end(),b.begin(),b.end());
+
+            PArray pj = JetDefinition::instance()->sumP(subset, m_particles);
+            jf = JetDefinition::instance()->jetFunction(pj);
 
             //if (protoJet.jetFunction() > cone.jetFunction()) {
                 //DEBUG_MSG("====Cache result: " << protoJet.jetFunction());
-                cone.setJetFunction(protoJet.jetFunction());
+            cone.setJetFunction(jf);
             //}
-            if (protoJet.jetFunction() > maxJetFunction) {
-                DEBUG_MSG("Jet Function Value:" << protoJet.jetFunction() << " " << protoJet.content().size());
-                jet = protoJet;
+            if (jf > maxJetFunction) {
+                DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
                 jetCone = cone;
-                maxJetFunction = jet.jetFunction();
+                maxJetFunction = jf;
             }
 
             if (b.size() == 3) {
@@ -105,18 +129,18 @@ Jet JetFinder::findOneJet()
                     for (unsigned int j = i+1; j < 3; j++) {
                         subset.clear();
                         subset.insert(subset.end(),inner.begin(),inner.end());
-                        subset.push_back(m_particles[b[i]]);
-                        subset.push_back(m_particles[b[j]]);
-                        Jet protoJet(subset);
+                        subset.push_back(b[i]);
+                        subset.push_back(b[j]);
+                        pj = JetDefinition::instance()->sumP(subset, m_particles);
+                        jf = JetDefinition::instance()->jetFunction(pj);
                         keep = b[3 - i - j]; // the vector not included;
-                        if (protoJet.jetFunction() > cone.jetFunction()) {
-                            cone.setJetFunction(protoJet.jetFunction());
+                        if (jf > cone.jetFunction()) {
+                            cone.setJetFunction(jf);
                             cone.setKeep(keep);
                         }
-                        if (protoJet.jetFunction() > maxJetFunction) {
-                            DEBUG_MSG("Jet Function Value:" << protoJet.jetFunction() << " " << protoJet.content().size());
+                        if (jf > maxJetFunction) {
+                            DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
                             jetCone = cone;
-                            jet = protoJet;
                             maxJetFunction = jet.jetFunction();
                         }
                     }
@@ -125,25 +149,24 @@ Jet JetFinder::findOneJet()
                 for (unsigned int i = 0; i < 2; i++) {
                     subset.clear();
                     subset.insert(subset.end(),inner.begin(),inner.end());
-                    subset.push_back(m_particles[b[i]]);
-                    Jet protoJet(subset);
-                    keep = b[2 - i]; // the vector not included;
-                    if (protoJet.jetFunction() > cone.jetFunction()) {
-                        cone.setJetFunction(protoJet.jetFunction());
+                    subset.push_back(b[i]);
+                    pj = JetDefinition::instance()->sumP(subset, m_particles);
+                    jf = JetDefinition::instance()->jetFunction(pj);
+                    keep = b[1 - i]; // the vector not included;
+                    if (jf > cone.jetFunction()) {
+                        cone.setJetFunction(jf);
                         cone.setKeep(keep);
                     }
-                    if (protoJet.jetFunction() > maxJetFunction) {
-                        DEBUG_MSG("Jet Function Value:" << protoJet.jetFunction() << " " << protoJet.content().size());
+                    if (jf > maxJetFunction) {
+                        DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
                         jetCone = cone;
-                        jet = protoJet;
-                        maxJetFunction = jet.jetFunction();
+                        maxJetFunction = jf;
                     }
                 }
             } else {
                 DEBUG_MSG("The boundary contains: " << b.size() << " particles. Something is wrong!");
             }
-        }
-        else {
+        } else {
             DEBUG_MSG("Cached results" << cone.jetFunction());
             if (maxJetFunction < cone.jetFunction()) {
                 jetCone = cone;
@@ -152,66 +175,29 @@ Jet JetFinder::findOneJet()
         }
     }
     //VectorList inner(cone.indices().size());
-    VectorList inner{};
-    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    DEBUG_MSG(jetCone.content().size());
-    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-    for (unsigned int i = 0; i < jetCone.content().size(); i++) {
-        DEBUG_MSG("!!particle in cone: " << jetCone.content()[i]);
-        if (m_discarded[jetCone.content()[i]] > 0) {
-            inner.push_back(m_particles[jetCone.content()[i]]);
-        }
-        DEBUG_MSG("Passed");
-    }
-
-    jet = Jet(inner);
-    DEBUG_MSG("Find cone " << jet.content().size() << " " << maxJetFunction);
-    //std::vector<unsigned int > content(jetCone.indices());
     std::vector<unsigned int > content{};
     for (auto i : jetCone.content()) {
-        if (m_discarded[i] > 0) {
+        if (m_particlesRemaining[i] > 0) {
             content.push_back(i);
         }
     }
+    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    DEBUG_MSG(content.size());
+    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+    jet = Jet(content, m_particles);
+    DEBUG_MSG("Find cone " << jet.content().size() << " " << maxJetFunction);
+    //std::vector<unsigned int > content(jetCone.indices());
     for (auto i: content) {
         DEBUG_MSG("particle: " << i);
-        m_discarded[i] = 0;
-        if (not m_cones.empty()) {
-            int count = 0;
-            for (auto & c: m_cones) {
-                if (not c.discarded()) {
-                    DEBUG_MSG("size: " << c.indices().size());
-                    //for (auto j: c.boundary()) {
-                    //    MSG("boundary: " << j);
-                    //}
-                    //for (auto j: c.indices()) {
-                    //    MSG("inner: " << j);
-                    //}
-                    if (std::find(c.boundary().begin(), c.boundary().end(), i) != c.boundary().end()) {
-                        DEBUG_MSG("On the boundary");
-                        c.discard();
-                        if (c.discarded()) {
-                            DEBUG_MSG("REALLY DISCARDED");
-                        }
-                    }
-                    if (std::find(c.indices().begin(), c.indices().end(), i) != c.indices().end()) {
-                        DEBUG_MSG("Dirty Cone");
-                        //MSG(std::find(c.indices().begin(), c.indices().end(), i))
-                        c.markDirty();
-                        count += 1;
-                    } /*else {
-                        MSG("Clean!");
-                    }*/
-                    DEBUG_MSG("========================================================================");
-                } else {
-                    DEBUG_MSG("Already discarded!");
-                }
-            }
-            //m_cones.erase(std::remove_if(m_cones.begin(), m_cones.end(), [&](const JetCone & c) {
-            //    return std::find(c.boundary().begin(), c.boundary().end(), i) != c.boundary().end();
-            //}), m_cones.end());
-            std::cout << count << " dirty cones" << std::endl;
+        m_particles[i].discard();
+        DEBUG_MSG("Discard " << m_particles[i].associatedBoundaries().size() << " cones!");
+        DEBUG_MSG(m_particles[i].associatedInners().size() << " dirty cones!");
+        for (auto j: m_particles[i].associatedBoundaries()) {
+            m_cones[j].discard();
+        }
+        for (auto j: m_particles[i].associatedInners()) {
+            m_cones[j].markDirty();
         }
     }
     //std::cout << "continue" << std::endl;
