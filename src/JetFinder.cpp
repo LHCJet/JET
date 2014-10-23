@@ -12,57 +12,20 @@ JetList JetFinder::jets()
     m_distances = JetDefinition::instance()->generateDistanceTable(m_particles);
     m_cones = JetDefinition::instance()->generateCones(m_particles, m_distances);
     DEBUG_MSG("Total number of cones: " << m_cones.size());
-#ifdef DEBUG
-    for (auto pt : m_particles) {
-        DEBUG_MSG("Input particles: " << pt.prettyOutput());
-        for (auto j : pt.associatedBoundaries()) {
-            std::cout << j << " ";
-        }
-        std::cout << std::endl;
-    }
-#endif
     DEBUG_MSG("====================Start Clustering...====================");
     JetList results{};
     int n = 0;
-    int m = 0;
     do {
         Jet j = findOneJet();
         results.push_back(j);
         DEBUG_MSG("Jet:" << j.jet().prettyOutput() << ' ' << j.content().size());
-//        for (auto pt : j.content()) {
-//            m_particles.erase(std::remove(m_particles.begin(), m_particles.end(), pt), m_particles.end());
-//            DEBUG_MSG("Number of particles left: " << m_particles.size());
-//            if (not m_cones.empty()) {
-//                m_cones.erase(std::remove_if(m_cones.begin(), m_cones.end(), [&](const JetCone & c) {
-//                    return std::find(c.boundary().begin(), c.boundary().end(), pt) != c.boundary().end();
-//                }), m_cones.end());
-//                DEBUG_MSG("Number of cones left: " << m_cones.size());
-//            }
-//        }
-        //DEBUG_MSG("Number of cones left: " << m_cones.size());
         n = 0;
-        m = 0;
         DEBUG_MSG("===================Remaining Cones==========================");
         for (unsigned int i = 0; i < m_cones.size(); i++) {
             if (not m_cones[i].discarded()) {
-//                std::cout << i << ' ' << m_cones[i].jetFunction() << " {";
-//                for (auto j : m_cones[i].boundary()) {
-//                    std::cout << j << ' ';
-//                }
-//                std::cout << '}';
                 n += 1;
             }
         }
-//        std::cout << std::endl;
-//        DEBUG_MSG("===================Remaining Particles==========================");
-//        for (unsigned int i = 0; i < m_particles.size(); i++) {
-//            if (not m_particles[i].discarded()) {
-//                std::cout << i << ' ';
-//                m += 1;
-//            }
-//        }
-//        std::cout << std::endl;
-        //std::cout << n << " cones left" << std::endl;
         DEBUG_MSG(n << " cones left");
     } while (n > 0);
     //FIXME: single particle jet;
@@ -72,18 +35,6 @@ JetList JetFinder::jets()
 Jet JetFinder::findOneJet()
 {
     Jet jet;
-    if (m_cones.empty()) {
-        //FIXME: no cone
-        for (unsigned int i = 0; i < m_particles.size(); i++ ) {
-            if (m_particlesRemaining[i] > 0) {
-                IndexList ids{i};
-                Jet single(ids, m_particles);
-                m_particlesRemaining[i] = 0;
-                return single;
-            }
-        }
-        DEBUG_MSG("Should not reach here");
-    }
 
     double maxJetFunction = -100000;
 
