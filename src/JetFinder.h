@@ -31,9 +31,7 @@ typedef std::vector<Jet> JetList;
 class JetFinder
 {
 public:
-    JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {
-        m_distances = NULL;
-    }
+    JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {}
     ~JetFinder() {
     }
     JetList jets();
@@ -42,7 +40,6 @@ private:
     Jet protoJet(VectorList subset);
     VectorList m_particles;
     JetConeList m_cones;
-    double ** m_distances;
 };
 
 } // namespace SlowJet;

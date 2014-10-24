@@ -111,11 +111,11 @@ double ** JetDefinition::generateDistanceTable(const VectorList & particles)
     return distances;
 }
 
-JetConeList JetDefinition::generateCones(VectorList & particles, double ** distances)
+JetConeList JetDefinition::generateCones(VectorList & particles)
 {
     JetConeList cones{};
     double cos2th = 2*m_b*m_b-1;
-    generateDistanceTable(particles);
+    double ** distances = generateDistanceTable(particles);
     //std::cout << cos2th << std::endl;
     unsigned int cone_index = 0;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
@@ -188,6 +188,12 @@ JetConeList JetDefinition::generateCones(VectorList & particles, double ** dista
             }
         }
     }
+
+    for (unsigned int i = 0; i < particles.size(); i++) {
+        delete [] distances[i];
+    }
+    delete [] distances;
+
     //DEBUG_MSG(cones.size() << " cones generated!");
     std::cout << cones.size() << " cones generated!" << std::endl;
     return cones;

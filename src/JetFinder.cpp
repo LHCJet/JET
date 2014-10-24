@@ -9,8 +9,7 @@ namespace SlowJet
 JetList JetFinder::jets()
 {
     DEBUG_MSG("Total number of particles: " << m_particles.size());
-    m_distances = JetDefinition::instance()->generateDistanceTable(m_particles);
-    m_cones = JetDefinition::instance()->generateCones(m_particles, m_distances);
+    m_cones = JetDefinition::instance()->generateCones(m_particles);
     DEBUG_MSG("Total number of cones: " << m_cones.size());
     DEBUG_MSG("====================Start Clustering...====================");
     JetList results{};

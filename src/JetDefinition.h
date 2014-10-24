@@ -15,14 +15,14 @@ public:
     void setBeta(double);
     double beta() const {return m_beta;}
     PArray sumP(const IndexList &, const VectorList &);
-    JetConeList generateCones(VectorList &, double **);
-    double ** generateDistanceTable(const VectorList &);
+    JetConeList generateCones(VectorList &);
 
 private:
     JetDefinition() : m_betaMin(2.0), m_beta(2.0), m_b(0.5) {}
     ~JetDefinition() {}
     JetCone findCone(const Vector &, const Vector &, const Vector &);
     JetCone findCone(const Vector &, const Vector &);
+    double ** generateDistanceTable(const VectorList &);
     static JetDefinition * m_instance;
     double m_beta;
     double m_betaMin;
