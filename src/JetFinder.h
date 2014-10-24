@@ -37,10 +37,6 @@ class JetFinder
 public:
     JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {
         m_distances = NULL;
-        m_particlesRemaining = new int[particles.size()];
-        for (unsigned int i; i < particles.size(); i++) {
-            m_particlesRemaining[i] = 1;
-        }
     }
     ~JetFinder() {
     }
@@ -51,8 +47,6 @@ private:
     VectorList m_particles;
     JetConeList m_cones;
     double ** m_distances;
-    int * m_particlesRemaining;
-    int * m_conesRemaining;
 };
 
 } // namespace SlowJet;

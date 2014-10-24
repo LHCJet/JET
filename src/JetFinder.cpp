@@ -53,7 +53,12 @@ Jet JetFinder::findOneJet()
             double jf = 0;
             IndexList b = cone.boundary();
             //VectorList inner(cone.indices().size());
-            IndexList inner = cone.indices();
+            IndexList inner{};
+            for (auto i : cone.indices()) {
+                if (not m_particles[i].discarded()) {
+                    inner.push_back(i);
+                }
+            }
 
             DEBUG_MSG(inner.size() << " particles inside this cone");
 
@@ -128,7 +133,7 @@ Jet JetFinder::findOneJet()
     //VectorList inner(cone.indices().size());
     std::vector<unsigned int > content{};
     for (auto i : jetCone.content()) {
-        if (m_particlesRemaining[i] > 0) {
+        if (not m_particles[i].discarded()) {
             content.push_back(i);
         }
     }
