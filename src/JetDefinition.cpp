@@ -106,9 +106,7 @@ double ** JetDefinition::generateDistanceTable(const VectorList & particles)
             } else {
                 distances[i][j] = -1.0;
             }
-            //printf ("%f ", distances[i][j]);
         }
-        //printf ("\n");
     }
     return distances;
 }
