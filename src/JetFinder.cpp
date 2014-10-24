@@ -79,10 +79,9 @@ Jet JetFinder::findOneJet()
             PArray pj = JetDefinition::instance()->sumP(subset, m_particles);
             jf = JetDefinition::instance()->jetFunction(pj);
 
-            //if (protoJet.jetFunction() > cone.jetFunction()) {
-                //DEBUG_MSG("====Cache result: " << protoJet.jetFunction());
             cone.setJetFunction(jf);
-            //}
+            cone.setKeep(-1);
+
             if (jf > maxJetFunction) {
                 DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
                 jetCone = cone;
@@ -106,7 +105,7 @@ Jet JetFinder::findOneJet()
                         if (jf > maxJetFunction) {
                             DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
                             jetCone = cone;
-                            maxJetFunction = jet.jetFunction();
+                            maxJetFunction = jf;
                         }
                     }
                 }
