@@ -12,22 +12,18 @@ class Jet
 {
 public:
     Jet(IndexList & c, const VectorList & p)
-        : m_jet{}, m_content{c}, m_jetFunction(0) {
+        : m_jet{}, m_content{c} {
         PArray jetP = JetDefinition::instance()->sumP(c, p);
         m_jet = Vector(jetP[0], jetP[1], jetP[2], jetP[3]);
-        m_jetFunction = JetDefinition::instance()->jetFunction(jetP);
     }
-    Jet() : m_jet{}, m_content{}, m_jetFunction(0) {}
+    Jet() : m_jet{}, m_content{} {}
     ~Jet() {}
     const Vector & jet() const {return m_jet;}
     const IndexList & content() const {return m_content;}
-    double jetFunction() const {return m_jetFunction;}
 
 private:
     Vector m_jet;
     IndexList m_content;
-    double m_jetFunction;
-
 };
 
 typedef std::vector<Jet> JetList;

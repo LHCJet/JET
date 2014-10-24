@@ -1,13 +1,15 @@
 #include "Vector.h"
+#include "JetDefinition.h"
 #include <cmath>
 #include <sstream>
 
 namespace SlowJet {
 
 Vector::Vector(const double px, const double py, const double pz, const double E)
-    :m_p{px, py, pz, E}, m_p_normalized{0, 0, 0, 0}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false)
+    :m_p{px, py, pz, E}, m_p_normalized{0, 0, 0, 0}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false), m_jetFunction(0)
 {
     normalizeVector();
+    m_jetFunction = JetDefinition::instance()->jetFunction(m_p);
 }
 
 void Vector::normalizeVector()
