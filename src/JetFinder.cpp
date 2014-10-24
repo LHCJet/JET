@@ -108,26 +108,6 @@ Jet JetFinder::findOneJet()
                         }
                     }
                 }
-            } else if (b.size() == 2) {
-                for (unsigned int i = 0; i < 2; i++) {
-                    subset.clear();
-                    subset.insert(subset.end(),inner.begin(),inner.end());
-                    subset.push_back(b[i]);
-                    pj = JetDefinition::instance()->sumP(subset, m_particles);
-                    jf = JetDefinition::instance()->jetFunction(pj);
-                    keep = b[1 - i]; // the vector not included;
-                    if (jf > cone.jetFunction()) {
-                        cone.setJetFunction(jf);
-                        cone.setKeep(keep);
-                    }
-                    if (jf > maxJetFunction) {
-                        DEBUG_MSG("Jet Function Value:" << jf << " " << subset.size());
-                        jetCone = cone;
-                        maxJetFunction = jf;
-                    }
-                }
-            } else {
-                DEBUG_MSG("The boundary contains: " << b.size() << " particles. Something is wrong!");
             }
         } else {
             DEBUG_MSG("Cached results" << cone.jetFunction());
