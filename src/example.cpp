@@ -35,7 +35,7 @@ int main()
             continue;
         }
         SlowJet::PArray p = jets[i].jet().fourVector();
-        std::cout  << i  << " "
+        std::cout << std::setprecision(12) << i  << " "
              << p[0] << " "
              << p[1] << " "
              << p[2] << " "

@@ -2,11 +2,12 @@
 #define DEBUG_H
 
 #include <iostream>
+#include <iomanip>
+
 #ifdef DEBUG
-#define DEBUG_MSG(str) do { std::cout << "DEBUG: " << str << std::endl; } while( false )
+#define DEBUG_MSG(str) do { std::cout << std::setprecision(12) << "DEBUG: " << str << std::endl; } while( false )
 #else
 #define DEBUG_MSG(str) do { } while ( false )
 #endif
-#define MSG(str) do { std::cout << "DEBUG: " << str << std::endl; } while( false )
 
 #endif
