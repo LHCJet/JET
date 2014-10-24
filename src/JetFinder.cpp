@@ -137,16 +137,27 @@ Jet JetFinder::findOneJet()
             }
         }
     }
-    //VectorList inner(cone.indices().size());
-    IndexList content{};
-    for (auto i : jetCone.content()) {
-        if (not m_particles[i].discarded()) {
-            content.push_back(i);
+
+    int single = -1;
+
+    for(unsigned int i = 0; i < m_particles.size(); i++) {
+        if (not m_particles[i].discarded() and m_particles[i].jetFunction() > maxJetFunction) {
+            maxJetFunction = m_particles[i].jetFunction();
+            single = i;
         }
     }
-    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-    DEBUG_MSG(content.size());
-    DEBUG_MSG("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
+    IndexList content{};
+
+    if (single >= 0) {
+        content.push_back((unsigned int)single);
+    } else {
+        for (auto i : jetCone.content()) {
+            if (not m_particles[i].discarded()) {
+                content.push_back(i);
+            }
+        }
+    }
 
     jet = Jet(content, m_particles);
     DEBUG_MSG("Find cone " << jet.content().size() << " " << maxJetFunction);
