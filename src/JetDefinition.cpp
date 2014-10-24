@@ -41,8 +41,10 @@ PArray JetDefinition::sumP(const IndexList & indices, const VectorList & particl
     PArray jetP{0,0,0,0};
     for(auto i: indices) {
         PArray p = particles[i].fourVector();
-        std::transform(p.begin(), p.end(), jetP.begin(), jetP.begin(),
-                std::plus<double>());
+        jetP[0] += p[0];
+        jetP[1] += p[1];
+        jetP[2] += p[2];
+        jetP[3] += p[3];
     }
     return jetP;
 }
@@ -131,11 +133,11 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
                 PArray p = c.normalizedFourVector();
                 if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
                     for (unsigned int l = 0; l < particles.size(); l++) {
-                        if (l == i or l == j or l == k) {
-                            particles[l].addAssociatedBoundaries(cone_index);
+                        if (distances[i][l] < 0) {
                             continue;
                         }
-                        if (distances[i][l] < 0) {
+                        if (l == i or l == j or l == k) {
+                            particles[l].addAssociatedBoundaries(cone_index);
                             continue;
                         }
                         if (zt(c, particles[l]) >= cone.radius()) {
@@ -161,11 +163,11 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
             PArray p = c.normalizedFourVector();
             if (cone.radius() > sqrt(1+(1/m_b/m_b-1)*p[2]*p[2])*m_b) {
                 for (unsigned int l = 0; l < particles.size(); l++) {
-                    if (l == i or l == j) {
-                        particles[l].addAssociatedBoundaries(cone_index);
+                    if (distances[i][l] < 0) {
                         continue;
                     }
-                    if (distances[i][l] < 0) {
+                    if (l == i or l == j) {
+                        particles[l].addAssociatedBoundaries(cone_index);
                         continue;
                     }
                     if (zt(c, particles[l]) >= cone.radius()) {
