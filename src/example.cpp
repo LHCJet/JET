@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 int main()
 {
@@ -20,6 +21,7 @@ int main()
         if (line.substr(0,1) == "#") {continue;}
         double px,py,pz,E;
         linestream >> px >> py >> pz >> E;
+        E = sqrt(px*px+py*py+pz*pz);
         input_particles.push_back(SlowJet::Vector(px,py,pz,E));
     }
     DEBUG_MSG("================================================================================");
