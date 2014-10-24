@@ -139,7 +139,7 @@ Jet JetFinder::findOneJet()
         }
     }
     //VectorList inner(cone.indices().size());
-    std::vector<unsigned int > content{};
+    IndexList content{};
     for (auto i : jetCone.content()) {
         if (not m_particles[i].discarded()) {
             content.push_back(i);

@@ -151,7 +151,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles, double ** dista
                             cone.addIndex(l);
                         }
                     }
-                    cone.setBoundary (std::vector<unsigned int > {i,j,k});
+                    cone.setBoundary(IndexList{i,j,k});
                     cones.push_back(cone);
                     cone_index++;
                     DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
@@ -183,7 +183,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles, double ** dista
                         cone.addIndex(l);
                     }
                 }
-                cone.setBoundary (std::vector<unsigned int > {i,j});
+                cone.setBoundary(IndexList{i,j});
                 cones.push_back(cone);
                 cone_index++;
                 DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
