@@ -116,18 +116,12 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
     JetConeList cones{};
     double cos2th = 2*m_b*m_b-1;
     double ** distances = generateDistanceTable(particles);
-    //std::cout << cos2th << std::endl;
     unsigned int cone_index = 0;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
-        unsigned int count_n =0;
-        unsigned int count_n2 =0;
-        PArray pp = particles[i].normalizedFourVector();
-        Vector xp(pp[0],pp[1],cos2th*pp[2],pp[3]);
         for (unsigned int j = i+1; j < particles.size() - 1; j++) {
             if (distances[i][j] < 0) {
                 continue;
             }
-            count_n++;
             for (unsigned int k = j+1; k < particles.size(); k++) {
                 if (distances[i][k] < 0 or distances[j][k] < 0) {
                     continue;
@@ -153,11 +147,9 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
                     cones.push_back(cone);
                     cone_index++;
                     DEBUG_MSG("Cone contains: " << cone.indices().size() << " particles");
-                    //count_n2++;
                 }
             }
         }
-//        std::cout << count_n << " particles in the fiducial region." << std::endl;
     }
     for (unsigned int i = 0; i < particles.size() - 1; i++) {
         for (unsigned int j = i+1; j < particles.size(); j++) {

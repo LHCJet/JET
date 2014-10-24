@@ -19,16 +19,11 @@ public:
     double radius() const {return m_radius; }
     double jetFunction() const {return m_jetFunction;}
     void addIndex(unsigned int i) { m_indices.push_back(i); }
-    void setKeep(unsigned int k) {
-        m_keep = k;
-        DEBUG_MSG("set exclude: " << m_keep);
-    }
+    void setKeep(unsigned int k) { m_keep = k; }
     const IndexList & indices() const { return m_indices; }
     IndexList content() const {
         IndexList res(m_indices);
-        //DEBUG_MSG("exclude: " << m_keep);
         for (unsigned int i = 0; i < m_boundary.size(); i++) {
-            //DEBUG_MSG(m_boundary[i]);
             if (m_boundary[i] != m_keep) {
                 res.push_back(m_boundary[i]);
             }
@@ -39,8 +34,7 @@ public:
         return m_boundary == d.boundary();
     }
     bool discarded() const {return m_discarded;}
-    void discard() {
-        m_discarded = true; }
+    void discard() { m_discarded = true; }
     bool dirty() const { return m_dirty; }
     void markDirty() { m_dirty = true; }
 private:
