@@ -28,7 +28,16 @@ JetList JetFinder::jets()
         }
         DEBUG_MSG(n << " cones left");
     } while (n > 0);
-    //FIXME: single particle jet;
+
+    for (unsigned int i = 0; i < m_particles.size(); i++) {
+        if (not m_particles[i].discarded()) {
+            n += 1;
+            IndexList ids{i};
+            Jet single(ids, m_particles);
+            results.push_back(single);
+        }
+    }
+
     return results;
 }
 
