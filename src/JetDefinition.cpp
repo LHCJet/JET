@@ -200,4 +200,35 @@ double EtConeDefinition::coneBoundary(const PArray & center) const
     return m_b*sqrt(1+(1/m_b/m_b -1)*center[2]*center[2]);
 }
 
+EConeDefinition::EConeDefinition(double beta)
+    :JetDefinition(beta), m_b(0), m_cos2th(0)
+{
+    if (beta < 2.0){
+        DEBUG_MSG("beta is too small:" << beta);
+    }
+    DEBUG_MSG("New beta: " << beta);
+    m_b = 1.0 - 0.5 / beta;
+    m_cos2th = 2*m_b*m_b-1;
+}
+
+double EConeDefinition::jetFunction(const PArray & jetP) const
+{
+    return (1-m_beta)*jetP[3]+ m_beta*(jetP[0]*jetP[0]+jetP[1]*jetP[1]+jetP[2]*jetP[2])/jetP[3];
+}
+
+Vector EConeDefinition::fiducialCenter(const Vector & pt) const
+{
+    return pt;
+}
+
+double EConeDefinition::fiducialBoundary(const Vector & pt) const
+{
+    return m_cos2th;
+}
+
+double EConeDefinition::coneBoundary(const PArray & center) const
+{
+    return m_b;
+}
+
 }

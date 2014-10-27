@@ -46,6 +46,22 @@ private:
     double m_cos2th;
 };
 
+class EConeDefinition : public JetDefinition
+{
+public:
+    EConeDefinition(double beta);
+    virtual double jetFunction(const PArray &) const;
+
+protected:
+    virtual double fiducialBoundary(const Vector & pt) const;
+    virtual Vector fiducialCenter(const Vector & pt) const;
+    virtual double coneBoundary(const PArray & center) const;
+
+private:
+    double m_b;
+    double m_cos2th;
+};
+
 }
 
 #endif // JETDEFINITION_H
