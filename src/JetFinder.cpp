@@ -5,11 +5,19 @@
 
 namespace SlowJet
 {
+JetFinder::JetFinder(VectorList & particles, JetDefinition * jetDefinition)
+    : m_particles{particles}, m_cones{}
+{
+    m_jetDefinition = jetDefinition;
+    for (auto & p : m_particles) {
+        p.setJetFunction(m_jetDefinition->jetFunction(p.fourVector()));
+    }
+}
 
 JetList JetFinder::jets()
 {
     DEBUG_MSG("Total number of particles: " << m_particles.size());
-    m_cones = JetDefinition::instance()->generateCones(m_particles);
+    m_cones = m_jetDefinition->generateCones(m_particles);
     DEBUG_MSG("Total number of cones: " << m_cones.size());
     DEBUG_MSG("====================Start Clustering...====================");
     JetList results{};
@@ -32,6 +40,7 @@ JetList JetFinder::jets()
         if (not m_particles[i].discarded()) {
             IndexList ids{i};
             Jet single(ids, m_particles);
+            single.setVector(m_particles[i]);
             results.push_back(single);
         }
     }
@@ -41,7 +50,6 @@ JetList JetFinder::jets()
 
 Jet JetFinder::findOneJet()
 {
-    Jet jet;
 
     double maxJetFunction = -100000;
 
@@ -74,8 +82,8 @@ Jet JetFinder::findOneJet()
             subset.insert(subset.end(),inner.begin(),inner.end());
             subset.insert(subset.end(),b.begin(),b.end());
 
-            PArray pj = JetDefinition::instance()->sumP(subset, m_particles);
-            jf = JetDefinition::instance()->jetFunction(pj);
+            PArray pj = m_jetDefinition->sumP(subset, m_particles);
+            jf = m_jetDefinition->jetFunction(pj);
 
             cone.setJetFunction(jf);
             cone.setKeep(-1);
@@ -93,8 +101,8 @@ Jet JetFinder::findOneJet()
                         subset.insert(subset.end(),inner.begin(),inner.end());
                         subset.push_back(b[i]);
                         subset.push_back(b[j]);
-                        pj = JetDefinition::instance()->sumP(subset, m_particles);
-                        jf = JetDefinition::instance()->jetFunction(pj);
+                        pj = m_jetDefinition->sumP(subset, m_particles);
+                        jf = m_jetDefinition->jetFunction(pj);
                         keep = b[3 - i - j]; // the vector not included;
                         if (jf > cone.jetFunction()) {
                             cone.setJetFunction(jf);
@@ -128,17 +136,25 @@ Jet JetFinder::findOneJet()
 
     IndexList content{};
 
+    Vector vj{};
+
     if (single >= 0) {
         content.push_back((unsigned int)single);
+        vj = m_particles[single];
     } else {
         for (auto i : jetCone.content()) {
             if (not m_particles[i].discarded()) {
                 content.push_back(i);
             }
         }
+        PArray pj = m_jetDefinition->sumP(content,m_particles);
+        vj = Vector(pj[0],pj[1],pj[2],pj[3]);
+        vj.setJetFunction(maxJetFunction);
     }
 
-    jet = Jet(content, m_particles);
+
+    Jet jet = Jet(content, m_particles);
+    jet.setVector(vj);
     DEBUG_MSG("Find cone " << jet.content().size() << " " << maxJetFunction);
     //std::vector<unsigned int > content(jetCone.indices());
     for (auto i: content) {

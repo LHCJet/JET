@@ -12,12 +12,10 @@ class Jet
 {
 public:
     Jet(IndexList & c, const VectorList & p)
-        : m_jet{}, m_content{c} {
-        PArray jetP = JetDefinition::instance()->sumP(c, p);
-        m_jet = Vector(jetP[0], jetP[1], jetP[2], jetP[3]);
-    }
+        : m_jet{}, m_content{c} {}
     Jet() : m_jet{}, m_content{} {}
     ~Jet() {}
+    void setVector (const Vector & v) { m_jet = v; }
     const Vector & jet() const {return m_jet;}
     const IndexList & content() const {return m_content;}
 
@@ -31,15 +29,15 @@ typedef std::vector<Jet> JetList;
 class JetFinder
 {
 public:
-    JetFinder(const VectorList & particles) : m_particles{particles}, m_cones{} {}
-    ~JetFinder() {
-    }
+    JetFinder(VectorList & particles, JetDefinition * jetDefinition);
+    ~JetFinder() {}
     JetList jets();
 private:
     Jet findOneJet();
     Jet protoJet(VectorList subset);
     VectorList m_particles;
     JetConeList m_cones;
+    JetDefinition * m_jetDefinition;
 };
 
 } // namespace SlowJet;

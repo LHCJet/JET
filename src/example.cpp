@@ -25,8 +25,8 @@ int main()
         input_particles.push_back(SlowJet::Vector(px,py,pz,E));
     }
     DEBUG_MSG("================================================================================");
-    SlowJet::JetDefinition::instance()->setBeta(15.0);
-    SlowJet::JetFinder jf(input_particles);
+    SlowJet::JetDefinition * jetDefinition = new SlowJet::EtConeDefinition(12.0);
+    SlowJet::JetFinder jf(input_particles, jetDefinition);
     SlowJet::JetList jets = jf.jets();
     int count = 0;
     std::sort(jets.begin(),jets.end(),[](const SlowJet::Jet & a, const SlowJet::Jet & b){

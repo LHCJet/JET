@@ -43,6 +43,7 @@ public:
     void discard() { m_discarded = true; }
 
     double jetFunction() const { return m_jetFunction; }
+    void setJetFunction(double j) { m_jetFunction = j; }
 
 private:
     void normalizeVector();
