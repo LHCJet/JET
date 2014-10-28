@@ -80,7 +80,7 @@ double ** JetDefinition::generateDistanceTable(const VectorList & particles)
             if (zt(v, particles[j]) > boundary) {
                 distances[i][j] = zt(particles[i],particles[j]);
             } else {
-                distances[i][j] = -1.0;
+                distances[i][j] = -1.1;
             }
         }
     }
@@ -94,11 +94,11 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
     unsigned int cone_index = 0;
     for (unsigned int i = 0; i < particles.size() - 2; i++) {
         for (unsigned int j = i+1; j < particles.size() - 1; j++) {
-            if (distances[i][j] < 0) {
+            if (distances[i][j] < -1.0) {
                 continue;
             }
             for (unsigned int k = j+1; k < particles.size(); k++) {
-                if (distances[i][k] < 0 or distances[j][k] < 0) {
+                if (distances[i][k] < -1.0 or distances[j][k] < -1.0) {
                     continue;
                 }
                 JetCone cone = findCone(particles[i], particles[j], particles[k]);
@@ -106,7 +106,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
                 PArray p = c.normalizedFourVector();
                 if (cone.radius() > coneBoundary(p)) {
                     for (unsigned int l = 0; l < particles.size(); l++) {
-                        if (distances[i][l] < 0) {
+                        if (distances[i][l] < -1.0) {
                             continue;
                         }
                         if (l == i or l == j or l == k) {
@@ -128,7 +128,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
     }
     for (unsigned int i = 0; i < particles.size() - 1; i++) {
         for (unsigned int j = i+1; j < particles.size(); j++) {
-            if (distances[i][j] < 0) {
+            if (distances[i][j] < -1.0) {
                 continue;
             }
             JetCone cone = findCone(particles[i], particles[j]);
@@ -136,7 +136,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
             PArray p = c.normalizedFourVector();
             if (cone.radius() > coneBoundary(p)) {
                 for (unsigned int l = 0; l < particles.size(); l++) {
-                    if (distances[i][l] < 0) {
+                    if (distances[i][l] < -1.0) {
                         continue;
                     }
                     if (l == i or l == j) {
