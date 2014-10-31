@@ -30,6 +30,22 @@ private:
     double ** generateDistanceTable(const VectorList &);
 };
 
+class EtConeDefinition : public JetDefinition
+{
+public:
+    EtConeDefinition(double beta);
+    virtual double jetFunction(const PArray &) const;
+
+protected:
+    virtual double fiducialBoundary(const Vector & pt) const;
+    virtual Vector fiducialCenter(const Vector & pt) const;
+    virtual double coneBoundary(const PArray & center) const;
+
+private:
+    double m_b;
+    double m_cos2th;
+};
+
 class Et2ConeDefinition : public JetDefinition
 {
 public:

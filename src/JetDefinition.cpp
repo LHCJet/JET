@@ -166,6 +166,40 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
     return cones;
 }
 
+EtConeDefinition::EtConeDefinition(double beta)
+    :JetDefinition(beta), m_b(0), m_cos2th(0)
+{
+    if (beta < 1.0){
+        DEBUG_MSG("beta is too small:" << beta);
+    }
+    DEBUG_MSG("New beta: " << beta);
+    m_b = 1.0 - 1.0 /2.0/beta;
+    m_cos2th = 2*m_b*m_b-1;
+}
+
+double EtConeDefinition::jetFunction(const PArray & jetP) const
+{
+    double Et = sqrt(jetP[3]*jetP[3] - jetP[2]*jetP[2]);
+    return ((1-m_beta)*Et*Et + m_beta*(jetP[0]*jetP[0]+jetP[1]*jetP[1]))/Et;
+}
+
+Vector EtConeDefinition::fiducialCenter(const Vector & pt) const
+{
+    PArray p = pt.fourVector();
+    return Vector(p[0],p[1],p[2]*m_cos2th,p[3]);
+}
+
+double EtConeDefinition::fiducialBoundary(const Vector & pt) const
+{
+    PArray p = pt.normalizedFourVector();
+    return m_cos2th/sqrt(1-(1 - m_cos2th*m_cos2th)*p[2]*p[2]);
+}
+
+double EtConeDefinition::coneBoundary(const PArray & center) const
+{
+    return m_b*sqrt(1+(1/m_b/m_b -1)*center[2]*center[2]);
+}
+
 Et2ConeDefinition::Et2ConeDefinition(double beta)
     :JetDefinition(beta), m_b(0), m_cos2th(0)
 {
