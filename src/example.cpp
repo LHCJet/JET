@@ -25,7 +25,7 @@ int main()
         input_particles.push_back(SlowJet::Vector(px,py,pz,E));
     }
     DEBUG_MSG("================================================================================");
-    SlowJet::JetDefinition * jetDefinition = new SlowJet::EtConeDefinition(12.0);
+    SlowJet::JetDefinition * jetDefinition = new SlowJet::Et2ConeDefinition(12.0);
     SlowJet::JetFinder jf(input_particles, jetDefinition);
     SlowJet::JetList jets = jf.jets();
     int count = 0;
