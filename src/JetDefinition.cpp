@@ -237,7 +237,7 @@ double Et2ConeDefinition::coneBoundary(const PArray & center) const
 EConeDefinition::EConeDefinition(double beta)
     :JetDefinition(beta), m_b(0), m_cos2th(0)
 {
-    if (beta < 2.0){
+    if (beta < 1.0){
         DEBUG_MSG("beta is too small:" << beta);
     }
     DEBUG_MSG("New beta: " << beta);
