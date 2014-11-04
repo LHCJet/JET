@@ -241,7 +241,7 @@ EConeDefinition::EConeDefinition(double beta)
         DEBUG_MSG("beta is too small:" << beta);
     }
     DEBUG_MSG("New beta: " << beta);
-    m_b = 1.0 - 0.5 / beta;
+    m_b = sqrt(1.0 - 1.0 / beta);
     m_cos2th = 2*m_b*m_b-1;
 }
 
