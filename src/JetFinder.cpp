@@ -6,7 +6,7 @@
 #include "Debug.h"
 #include <algorithm>
 
-namespace SlowJet
+namespace JETJet
 {
 JetFinder::JetFinder(VectorList & particles, JetDefinition * jetDefinition)
     : m_particles{particles}, m_cones{}

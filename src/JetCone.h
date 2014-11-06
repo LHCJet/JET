@@ -7,7 +7,7 @@
 #include "Vector.h"
 #include "Debug.h"
 
-namespace SlowJet {
+namespace JETJet {
 
 class JetCone {
 public:

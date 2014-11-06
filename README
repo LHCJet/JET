@@ -1,6 +1,6 @@
-SlowJet
+JETJet
 ========================
-An implementation of arXiv:1408.1161 using jet function: Et^2 - beta m^2
+An implementation of JET algorithm described in arXiv:1411.xxxx
 
 Compiling (Requiring g++ with c++11 support):
 ----------

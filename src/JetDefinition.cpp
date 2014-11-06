@@ -9,7 +9,7 @@
 #include <cmath>
 #include <array>
 
-namespace SlowJet {
+namespace JETJet {
 
 JetDefinition * JetDefinition::m_instance = 0;
 

@@ -10,7 +10,7 @@
 
 #include <vector>
 
-namespace SlowJet {
+namespace JETJet {
 class Jet
 {
 public:
@@ -43,6 +43,6 @@ private:
     JetDefinition * m_jetDefinition;
 };
 
-} // namespace SlowJet;
+} // namespace JETJet;
 
 #endif // JETFINDER_H

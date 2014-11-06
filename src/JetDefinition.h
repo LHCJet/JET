@@ -7,7 +7,7 @@
 #include "Vector.h"
 #include "JetCone.h"
 
-namespace SlowJet {
+namespace JETJet {
 
 class JetDefinition
 {

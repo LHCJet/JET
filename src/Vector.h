@@ -9,7 +9,7 @@
 #include <string>
 #include <cmath>
 
-namespace SlowJet {
+namespace JETJet {
 
 typedef std::array<double, 4 > PArray;
 typedef std::vector<unsigned int > IndexList;
@@ -59,6 +59,6 @@ private:
 };
 
 typedef std::vector<Vector> VectorList;
-} // namespace SlowJet
+} // namespace JETJet
 
 #endif // VECTOR_H
