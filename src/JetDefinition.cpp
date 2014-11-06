@@ -164,8 +164,8 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
     }
     delete [] distances;
 
-    //DEBUG_MSG(cones.size() << " cones generated!");
-    std::cout << cones.size() << " cones generated!" << std::endl;
+    DEBUG_MSG(cones.size() << " cones generated!");
+    //std::cout << cones.size() << " cones generated!" << std::endl;
     return cones;
 }
 
