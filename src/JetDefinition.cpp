@@ -11,7 +11,6 @@
 
 namespace JETJet {
 
-JetDefinition * JetDefinition::m_instance = 0;
 JetDefinition::JetDefinition(double beta)
     : m_beta(beta)
 {

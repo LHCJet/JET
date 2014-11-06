@@ -24,7 +24,6 @@ protected:
     virtual double fiducialBoundary(const Vector & pt) const = 0;
     virtual Vector fiducialCenter(const Vector & pt) const = 0;
     virtual double coneBoundary(const PArray & center) const = 0;
-    static JetDefinition * m_instance;
     double m_beta;
 
 private:
