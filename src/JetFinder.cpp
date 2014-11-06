@@ -1,3 +1,6 @@
+/* Any copyright is dedicated to the Public Domain.
+ *  * http://creativecommons.org/publicdomain/zero/1.0/ */
+
 #include "JetFinder.h"
 #include "JetDefinition.h"
 #include "Debug.h"
