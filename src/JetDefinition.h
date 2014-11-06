@@ -12,7 +12,7 @@ namespace JETJet {
 class JetDefinition
 {
 public:
-    JetDefinition(double beta) : m_beta(beta) {}
+    JetDefinition(double beta);
     ~JetDefinition() {}
     double zt(const Vector &, const Vector &);
     double beta() const {return m_beta;}

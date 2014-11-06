@@ -12,6 +12,14 @@
 namespace JETJet {
 
 JetDefinition * JetDefinition::m_instance = 0;
+JetDefinition::JetDefinition(double beta)
+    : m_beta(beta)
+{
+    std::cout << "================================================================================" << std::endl;
+    std::cout << "==   JETJet: Implementation of JET algorithms described in arXiv: 1411.xxxx   ==" << std::endl;
+    std::cout << "================================================================================" << std::endl;
+    std::cout << std::endl;
+}
 
 double JetDefinition::zt(const Vector & pt1, const Vector & pt2)
 {
