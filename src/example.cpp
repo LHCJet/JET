@@ -28,7 +28,7 @@ int main()
         input_particles.push_back(JETJet::Vector(px,py,pz,E));
     }
     DEBUG_MSG("================================================================================");
-    JETJet::JetDefinition * jetDefinition = new JETJet::Et2ConeDefinition(12.0);
+    JETJet::JetDefinition * jetDefinition = new JETJet::EtConeDefinition(6.0);
     JETJet::JetFinder jf(input_particles, jetDefinition);
     JETJet::JetList jets = jf.jets();
     int count = 0;
