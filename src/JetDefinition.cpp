@@ -210,36 +210,45 @@ double EtConeDefinition::coneBoundary(const PArray & center) const
     return m_b*sqrt(1+(1/m_b/m_b -1)*center[2]*center[2]);
 }
 
-Et2ConeDefinition::Et2ConeDefinition(double beta)
-    :JetDefinition(beta), m_b(0), m_cos2th(0)
+EtAlphaConeDefinition::EtAlphaConeDefinition(double alpha, double beta)
+    :JetDefinition(beta), m_b(0), m_alpha(alpha), m_cos2th(0)
 {
-    if (beta < 2.0){
-        DEBUG_MSG("beta is too small:" << beta);
+    DEBUG_MSG("New alpha: " << alpha << ", beta: " << beta);
+    if (alpha < 0 or alpha > 2) {
+        DEBUG_MSG("Wrong alpha, reset it to 1");
+        m_alpha = 1;
     }
-    DEBUG_MSG("New beta: " << beta);
-    m_b = 1.0 - 1.0 / beta;
+    //ToCheck: whether this is still true in the forward region
+    if (alpha < 1) {
+        m_b = sqrt(1.0 - 1.0 / beta);
+    } else {
+        m_b = sqrt(alpha * (2.0 - alpha) * (1.0 - 1.0 / beta));
+        if (m_b < (1.0 - 0.5 / beta)) {
+            m_b = 1.0 - 0.5 / beta;
+        }
+    }
     m_cos2th = 2*m_b*m_b-1;
 }
 
-double Et2ConeDefinition::jetFunction(const PArray & jetP) const
+double EtAlphaConeDefinition::jetFunction(const PArray & jetP) const
 {
-    double Et2 = jetP[3]*jetP[3] - jetP[2]*jetP[2];
-    return (1-m_beta)*Et2 + m_beta*(jetP[0]*jetP[0]+jetP[1]*jetP[1]);
+    double Et = sqrt(jetP[3]*jetP[3] - jetP[2]*jetP[2]);
+    return pow(Et,m_alpha)*(1 - m_beta*(jetP[3]*jetP[3]-jetP[0]*jetP[0]-jetP[1]*jetP[1]-jetP[2]*jetP[2])/(Et*Et));
 }
 
-Vector Et2ConeDefinition::fiducialCenter(const Vector & pt) const
+Vector EtAlphaConeDefinition::fiducialCenter(const Vector & pt) const
 {
     PArray p = pt.fourVector();
     return Vector(p[0],p[1],p[2]*m_cos2th,p[3]);
 }
 
-double Et2ConeDefinition::fiducialBoundary(const Vector & pt) const
+double EtAlphaConeDefinition::fiducialBoundary(const Vector & pt) const
 {
     PArray p = pt.normalizedFourVector();
     return m_cos2th/sqrt(1-(1 - m_cos2th*m_cos2th)*p[2]*p[2]);
 }
 
-double Et2ConeDefinition::coneBoundary(const PArray & center) const
+double EtAlphaConeDefinition::coneBoundary(const PArray & center) const
 {
     return m_b*sqrt(1+(1/m_b/m_b -1)*center[2]*center[2]);
 }

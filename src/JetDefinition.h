@@ -48,10 +48,10 @@ private:
     double m_cos2th;
 };
 
-class Et2ConeDefinition : public JetDefinition
+class EtAlphaConeDefinition : public JetDefinition
 {
 public:
-    Et2ConeDefinition(double beta);
+    EtAlphaConeDefinition(double alpha, double beta);
     virtual double jetFunction(const PArray &) const;
 
 protected:
@@ -61,6 +61,7 @@ protected:
 
 private:
     double m_b;
+    double m_alpha;
     double m_cos2th;
 };
 
