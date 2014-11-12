@@ -213,6 +213,9 @@ double EtConeDefinition::coneBoundary(const PArray & center) const
 EtAlphaConeDefinition::EtAlphaConeDefinition(double alpha, double beta)
     :JetDefinition(beta), m_b(0), m_alpha(alpha), m_cos2th(0)
 {
+    if (beta < 1.0){
+        DEBUG_MSG("beta is too small:" << beta);
+    }
     DEBUG_MSG("New alpha: " << alpha << ", beta: " << beta);
     if (alpha < 0 or alpha > 2) {
         DEBUG_MSG("Wrong alpha, reset it to 1");
