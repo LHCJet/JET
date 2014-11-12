@@ -22,7 +22,7 @@ input_file is the file contains the four momentum of the particles in one event.
 
 Algorithms
 ----------
-Three different algorithms has been implemented so far in the code, by default jetjet will use the jet function Et - beta*m^2/Et, with beta=6. To use a different beta, find the line below in src/example.cpp
+Three different algorithms have been implemented so far in the code, by default jetjet will use the jet function Et - beta*m^2/Et, with beta=6. To use a different beta, find the line below in src/example.cpp
 ```C++
 JETJet::JetDefinition * jetDefinition = new JETJet::EtConeDefinition(6.0);
 ```
