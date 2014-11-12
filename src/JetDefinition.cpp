@@ -14,6 +14,10 @@ namespace JETJet {
 JetDefinition::JetDefinition(double beta)
     : m_beta(beta)
 {
+    if (beta < 1.0){
+        m_beta = 1.0;
+        DEBUG_MSG("beta is too small:" << beta << ", set it to 1.");
+    }
     std::cout << "================================================================================" << std::endl;
     std::cout << "==   JETJet: Implementation of JET algorithms described in arXiv: 1411.xxxx   ==" << std::endl;
     std::cout << "================================================================================" << std::endl;
@@ -179,10 +183,7 @@ JetConeList JetDefinition::generateCones(VectorList & particles)
 EtConeDefinition::EtConeDefinition(double beta)
     :JetDefinition(beta), m_b(0), m_cos2th(0)
 {
-    if (beta < 1.0){
-        DEBUG_MSG("beta is too small:" << beta);
-    }
-    DEBUG_MSG("New beta: " << beta);
+    DEBUG_MSG("New beta: " << m_beta);
     m_b = sqrt(1.0 - 1.0/beta);
     m_cos2th = 2*m_b*m_b-1;
 }
@@ -213,14 +214,11 @@ double EtConeDefinition::coneBoundary(const PArray & center) const
 EtAlphaConeDefinition::EtAlphaConeDefinition(double alpha, double beta)
     :JetDefinition(beta), m_b(0), m_alpha(alpha), m_cos2th(0)
 {
-    if (beta < 1.0){
-        DEBUG_MSG("beta is too small:" << beta);
-    }
-    DEBUG_MSG("New alpha: " << alpha << ", beta: " << beta);
     if (alpha < 0 or alpha > 2) {
         DEBUG_MSG("Wrong alpha, reset it to 1");
         m_alpha = 1;
     }
+    DEBUG_MSG("New alpha: " << m_alpha << ", beta: " << m_beta);
     //ToCheck: whether this is still true in the forward region
     if (alpha < 1) {
         m_b = sqrt(1.0 - 1.0 / beta);
@@ -261,10 +259,7 @@ double EtAlphaConeDefinition::coneBoundary(const PArray & center) const
 EConeDefinition::EConeDefinition(double beta)
     :JetDefinition(beta), m_b(0), m_cos2th(0)
 {
-    if (beta < 1.0){
-        DEBUG_MSG("beta is too small:" << beta);
-    }
-    DEBUG_MSG("New beta: " << beta);
+    DEBUG_MSG("New beta: " << m_beta);
     m_b = sqrt(1.0 - 1.0 / beta);
     m_cos2th = 2*m_b*m_b-1;
 }
