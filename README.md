@@ -20,7 +20,7 @@ $ ./jetjet < [input_file]
 ```
 input_file is the file contains the four momentum of the particles in one event. There are a few sample files in the sample directory for various scenarios. The output of jetjet uses the same format as print_jets_for_root function in FastJet.
 
-Algorithms
+Algorithms:
 ----------
 Three different algorithms have been implemented so far in the code, by default jetjet will use the jet function Et - beta*m^2/Et, with beta=6. To use a different beta, find the line below in src/example.cpp
 ```C++
