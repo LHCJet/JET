@@ -1,6 +1,6 @@
 JETJet
 =================================================================
-An implementation of JET algorithm described in arXiv:1411.xxxx.
+An implementation of JET algorithm described in arXiv:1411.3705.
 
 Compiling (Requiring CMake and compiler with C++11 support):
 --------------------------------------------
@@ -38,4 +38,4 @@ The third option is to use
 ```C++
 JETJet::JetDefinition * jetDefinition = new JETJet::EtAlphaConeDefinition(alpha, beta);
 ```
-This is the generalized algorithm described in the appendix of arXiv:1411.xxxx.
+This is the generalized algorithm described in Appendix A of arXiv:1411.3705.

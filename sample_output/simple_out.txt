@@ -1,5 +1,5 @@
 ================================================================================
-==   JETJet: Implementation of JET algorithms described in arXiv: 1411.xxxx   ==
+==   JETJet: Implementation of JET algorithms described in arXiv: 1411.3705   ==
 ================================================================================
 
 0 100000003.376 0 50000001.7441 111803402.875
