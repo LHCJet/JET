@@ -223,8 +223,8 @@ EtAlphaConeDefinition::EtAlphaConeDefinition(double alpha, double beta)
     if (alpha < 1) {
         m_b = sqrt(1.0 - 1.0 / beta);
     } else {
-        double v_min = sqrt(alpha/(alpha-2)*(beta -1)/beta);
-        if ( v_min < 1.0) {
+        double v_maximize = sqrt(alpha/(alpha-2)*(beta -1)/beta);
+        if ( v_maximize < 1.0) {
             m_b = sqrt(alpha * (2.0 - alpha) * (1.0 - 1.0 / beta));
         } else {
             m_b = 1.0 - 0.5 * alpha / beta;
