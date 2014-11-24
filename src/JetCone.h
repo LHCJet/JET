@@ -27,7 +27,7 @@ public:
     IndexList content() const {
         IndexList res(m_indices);
         for (unsigned int i = 0; i < m_boundary.size(); i++) {
-            if (m_boundary[i] != m_keep) {
+            if ((m_keep < 0) or (m_boundary[i] != static_cast<unsigned int>(m_keep))) {
                 res.push_back(m_boundary[i]);
             }
         }
