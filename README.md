@@ -7,7 +7,7 @@ Compiling (Requiring CMake and compiler with C++11 support):
 ```sh
 $ mkdir build
 $ cd build
-$ cmake ../
+$ cmake ../ -DCMAKE_BUILD_TYPE=Release
 $ make
 ```
 A binary file "jetjet" will be generated in the build directory.

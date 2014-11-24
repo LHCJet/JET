@@ -7,7 +7,7 @@
 #include <iostream>
 #include <iomanip>
 
-#ifdef DEBUG
+#ifndef NDEBUG
 #define DEBUG_MSG(str) do { std::cout << std::setprecision(12) << "DEBUG: " << str << std::endl; } while( false )
 #else
 #define DEBUG_MSG(str) do { } while ( false )
