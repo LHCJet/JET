@@ -33,7 +33,7 @@ double JetDefinition::zt(const Vector & pt1, const Vector & pt2)
 
 PArray JetDefinition::sumP(const IndexList & indices, const VectorList & particles)
 {
-    PArray jetP{0,0,0,0};
+    PArray jetP{{0,0,0,0}};
     for(auto i: indices) {
         PArray p = particles[i].fourVector();
         jetP[0] += p[0];

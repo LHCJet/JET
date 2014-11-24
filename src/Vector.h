@@ -16,7 +16,7 @@ typedef std::vector<unsigned int > IndexList;
 
 class Vector {
 public:
-    Vector() :m_p{0,0,0,0}, m_p_normalized{0,0,0,0}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false), m_jetFunction(0) {}
+    Vector() :m_p{{0,0,0,0}}, m_p_normalized{{0,0,0,0}}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false), m_jetFunction(0) {}
     Vector(const double px, const double py, const double pz, const double E);
     const PArray & fourVector() const {return m_p;}
     const double pt() const { return sqrt(m_p[0]*m_p[0]+m_p[1]*m_p[1]); }
