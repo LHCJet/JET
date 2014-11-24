@@ -11,7 +11,7 @@ namespace JETJet {
 
 class JetCone {
 public:
-    JetCone() : m_boundary{}, m_center{}, m_radius(0), m_indices{}, m_jetFunction(-100000), m_keep(-1), m_discarded(false), m_dirty(true) {}
+    JetCone() : m_boundary{}, m_indices{}, m_center{}, m_radius(0), m_jetFunction(-100000), m_keep(-1), m_discarded(false), m_dirty(true) {}
     ~JetCone() {}
     void setBoundary(const IndexList & b) { m_boundary = b; }
     void setCenter(const Vector & c) { m_center = c; }
