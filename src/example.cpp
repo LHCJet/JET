@@ -15,7 +15,6 @@
 int main()
 {
     JETJet::VectorList input_particles;
-    double px, py , pz, E;
     std::string line;
     while (std::getline(std::cin, line)) {
         std::istringstream linestream(line);
@@ -31,7 +30,6 @@ int main()
     JETJet::JetDefinition * jetDefinition = new JETJet::EtConeDefinition(6.0);
     JETJet::JetFinder jf(input_particles, jetDefinition);
     JETJet::JetList jets = jf.jets();
-    int count = 0;
     std::sort(jets.begin(),jets.end(),[](const JETJet::Jet & a, const JETJet::Jet & b){
             return a.jet().pt() > b.jet().pt(); // Descendent sorting
     });

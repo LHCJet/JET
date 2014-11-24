@@ -58,8 +58,6 @@ Jet JetFinder::findOneJet()
 
     JetCone jetCone;
     int keep = -1;
-    //for (unsigned int i_cone = 0; i_cone < m_cones.size(); i_cone++) {
-    unsigned int n = 0;
     for (auto & cone : m_cones) {
         keep = -1;
         if (cone.discarded()) {
@@ -67,7 +65,6 @@ Jet JetFinder::findOneJet()
         }
         if (cone.dirty()) {
             Vector c = cone.center();
-            double r = cone.radius();
             double jf = 0;
             IndexList b = cone.boundary();
             //VectorList inner(cone.indices().size());
