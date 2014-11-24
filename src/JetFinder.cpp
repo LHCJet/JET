@@ -42,7 +42,7 @@ JetList JetFinder::jets()
     for (unsigned int i = 0; i < m_particles.size(); i++) {
         if (not m_particles[i].discarded()) {
             IndexList ids{i};
-            Jet single(ids, m_particles);
+            Jet single(ids);
             single.setVector(m_particles[i]);
             results.push_back(single);
         }
@@ -153,7 +153,7 @@ Jet JetFinder::findOneJet()
     }
 
 
-    Jet jet = Jet(content, m_particles);
+    Jet jet = Jet(content);
     jet.setVector(vj);
     DEBUG_MSG("Find cone " << jet.content().size() << " " << maxJetFunction);
     //std::vector<unsigned int > content(jetCone.indices());

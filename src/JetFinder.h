@@ -14,7 +14,7 @@ namespace JETJet {
 class Jet
 {
 public:
-    Jet(IndexList & c, const VectorList & p)
+    Jet(IndexList & c)
         : m_jet{}, m_content{c} {}
     Jet() : m_jet{}, m_content{} {}
     ~Jet() {}
