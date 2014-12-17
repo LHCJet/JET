@@ -25,7 +25,7 @@ int main()
         linestream >> px >> py >> pz >> E;
         input_particles.push_back(fastjet::PseudoJet(px,py,pz,E));
     }
-    fastjet::JETJetPlugin * plugin = new fastjet::JETJetPlugin(6.0);
+    fastjet::JETJetPlugin * plugin = new fastjet::JETJetPlugin(fastjet::JETJetPlugin::EtCone, 6.0);
     fastjet::JetDefinition jet_def(plugin);
 
     // run the jet clustering with the above jet definition

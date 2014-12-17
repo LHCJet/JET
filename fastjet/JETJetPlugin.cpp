@@ -11,6 +11,29 @@ FASTJET_BEGIN_NAMESPACE
 std::string JETJetPlugin::description() const
 {
     return "Test JETJet";
+JETJetPlugin::JETJetPlugin(Algorithm alg, double beta, double alpha)
+    :JetDefinition::Plugin(), m_beta(beta), m_alpha(alpha)
+{
+    m_definition = NULL;
+    switch(alg) {
+        case ECone:
+        {
+            m_definition = new JETJet::EConeDefinition(m_beta);
+            break;
+        }
+        case EtCone:
+        {
+            m_definition = new JETJet::EtConeDefinition(m_beta);
+            break;
+        }
+        case EtAlphaCone:
+        {
+            m_definition = new JETJet::EtAlphaConeDefinition(m_alpha, m_beta);
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void JETJetPlugin::run_clustering(ClusterSequence & clust_seq) const
@@ -27,8 +50,7 @@ void JETJetPlugin::run_clustering(ClusterSequence & clust_seq) const
         E = sqrt(px*px+py*py+pz*pz);
         input_particles.push_back(JETJet::Vector(px,py,pz,E));
     }
-    JETJet::JetDefinition * jetDefinition = new JETJet::EtConeDefinition(6.0);
-    JETJet::JetFinder jf(input_particles, jetDefinition);
+    JETJet::JetFinder jf(input_particles, m_definition);
     JETJet::JetList jets = jf.jets();
     for (const auto & jet : jets) {
         JETJet::IndexList cst = jet.content();
