@@ -10,7 +10,13 @@ FASTJET_BEGIN_NAMESPACE
 
 std::string JETJetPlugin::description() const
 {
-    return "Test JETJet";
+    if (m_definition != NULL) {
+        return m_definition->description();
+    } else {
+        return "ERROR: Algorithm not defined";
+    }
+}
+
 JETJetPlugin::JETJetPlugin(Algorithm alg, double beta, double alpha)
     :JetDefinition::Plugin(), m_beta(beta), m_alpha(alpha)
 {
