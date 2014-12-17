@@ -8,6 +8,7 @@
 #include <functional>
 #include <cmath>
 #include <array>
+#include <sstream>
 
 namespace JETJet {
 
@@ -188,6 +189,13 @@ EtConeDefinition::EtConeDefinition(double beta)
     m_cos2th = 2*m_b*m_b-1;
 }
 
+std::string EtConeDefinition::description() const
+{
+    std::ostringstream desc;
+    desc << "JET algorithm (EtCone definition) with beta = " << m_beta;
+    return desc.str();
+}
+
 double EtConeDefinition::jetFunction(const PArray & jetP) const
 {
     double Et = sqrt(jetP[3]*jetP[3] - jetP[2]*jetP[2]);
@@ -233,6 +241,13 @@ EtAlphaConeDefinition::EtAlphaConeDefinition(double alpha, double beta)
     m_cos2th = 2*m_b*m_b-1;
 }
 
+std::string EtAlphaConeDefinition::description() const
+{
+    std::ostringstream desc;
+    desc << "JET algorithm (EtAlphaCone definition) with alpha = " << m_alpha << " and beta = " << m_beta;
+    return desc.str();
+}
+
 double EtAlphaConeDefinition::jetFunction(const PArray & jetP) const
 {
     double Et = sqrt(jetP[3]*jetP[3] - jetP[2]*jetP[2]);
@@ -262,6 +277,13 @@ EConeDefinition::EConeDefinition(double beta)
     DEBUG_MSG("New beta: " << m_beta);
     m_b = sqrt(1.0 - 1.0 / beta);
     m_cos2th = 2*m_b*m_b-1;
+}
+
+std::string EConeDefinition::description() const
+{
+    std::ostringstream desc;
+    desc << "JET algorithm (ECone definition) with beta = " << m_beta;
+    return desc.str();
 }
 
 double EConeDefinition::jetFunction(const PArray & jetP) const

@@ -19,6 +19,7 @@ public:
     PArray sumP(const IndexList &, const VectorList &);
     JetConeList generateCones(VectorList &);
     virtual double jetFunction(const PArray &) const = 0;
+    virtual std::string description() const = 0;
 
 protected:
     virtual double fiducialBoundary(const Vector & pt) const = 0;
@@ -37,6 +38,7 @@ class EtConeDefinition : public JetDefinition
 public:
     EtConeDefinition(double beta);
     virtual double jetFunction(const PArray &) const;
+    virtual std::string description() const;
 
 protected:
     virtual double fiducialBoundary(const Vector & pt) const;
@@ -53,6 +55,7 @@ class EtAlphaConeDefinition : public JetDefinition
 public:
     EtAlphaConeDefinition(double alpha, double beta);
     virtual double jetFunction(const PArray &) const;
+    virtual std::string description() const;
 
 protected:
     virtual double fiducialBoundary(const Vector & pt) const;
@@ -70,6 +73,7 @@ class EConeDefinition : public JetDefinition
 public:
     EConeDefinition(double beta);
     virtual double jetFunction(const PArray &) const;
+    virtual std::string description() const;
 
 protected:
     virtual double fiducialBoundary(const Vector & pt) const;
