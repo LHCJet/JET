@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 2.6)
 project (JETJet)
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
+
 include_directories("${CMAKE_SOURCE_DIR}/src")
 
 include(CheckCXXCompilerFlag)
@@ -12,10 +14,8 @@ else()
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 
-FIND_PROGRAM(FASTJET_CONFIG fastjet-config)
-exec_program(${FASTJET_CONFIG} ARGS --cxxflags --libs OUTPUT_VARIABLE FASTJET_PKG_FLAGS)
-set(FASTJET_PKG_FLAGS "${GTKMM_PKG_FLAGS}" CACHE STRING "GTKMM Flags")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${FASTJET_PKG_FLAGS}")
+find_package(FastJet)
+include_directories(FASTJET_INCLUDE_DIRS)
 message(STATUS "FastJet Flags: ${FASTJET_PKG_FLAGS}")
 #add_definitions(-std=c++11 -DDEBUG -g -ggdb)
 #add_definitions(-std=c++11 -O2 -g -ggdb -DDEBUG -D_USE_MATH_DEFINES -march=native)
@@ -37,4 +37,4 @@ add_executable(fastjet_plugin_example
 
 target_link_libraries(jetjet_example JETJet)
 
-target_link_libraries(fastjet_plugin_example JETJetPlugin JETJet ${FASTJET_PKG_FLAGS})
+target_link_libraries(fastjet_plugin_example JETJetPlugin JETJet ${FASTJET_LIBRARIES})
