@@ -11,8 +11,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 #add_definitions(-std=c++11 -DDEBUG -g -ggdb)
 #add_definitions(-std=c++11 -O2 -g -ggdb -DDEBUG -D_USE_MATH_DEFINES -march=native)
 add_definitions(-D_USE_MATH_DEFINES)
-add_executable(jetjet
-    src/example.cpp
+
+add_library(jetjet SHARED
     src/JetDefinition.cpp
     src/JetFinder.cpp
     src/Vector.cpp)
+
+add_executable(jetjet_example
+    src/example.cpp)
+
+target_link_libraries(jetjet_example jetjet)
