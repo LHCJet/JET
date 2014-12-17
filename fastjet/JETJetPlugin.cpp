@@ -1,6 +1,5 @@
 #include "JETJetPlugin.h"
 #include "Vector.h"
-#include "JetCone.h"
 #include "JetDefinition.h"
 #include "JetFinder.h"
 
