@@ -14,6 +14,7 @@ public:
         EtAlphaCone
     };
     JETJetPlugin(Algorithm alg, double beta, double alpha=1.0);
+    ~JETJetPlugin();
     virtual std::string description () const;
     virtual void run_clustering(ClusterSequence &) const;
     virtual double R() const {return m_beta;}

@@ -42,6 +42,13 @@ JETJetPlugin::JETJetPlugin(Algorithm alg, double beta, double alpha)
     }
 }
 
+JETJetPlugin::~JETJetPlugin() {
+    if (m_definition != NULL) {
+        delete m_definition;
+        m_definition = NULL;
+    }
+}
+
 void JETJetPlugin::run_clustering(ClusterSequence & clust_seq) const
 {
     const std::vector<PseudoJet> & initial_particles = clust_seq.jets();
