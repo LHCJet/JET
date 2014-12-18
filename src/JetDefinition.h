@@ -13,7 +13,7 @@ class JetDefinition
 {
 public:
     JetDefinition(double beta);
-    ~JetDefinition() {}
+    virtual ~JetDefinition() {}
     double zt(const Vector &, const Vector &);
     double beta() const {return m_beta;}
     PArray sumP(const IndexList &, const VectorList &);
