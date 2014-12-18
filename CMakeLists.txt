@@ -1,6 +1,12 @@
 cmake_minimum_required (VERSION 2.8.5 FATAL_ERROR)
 project (JETJet)
 
+# Set a default build type if none was specified
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    message(STATUS "Setting build type to 'Release' as none was specified.")
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
+endif()
+
 option(JET_ENABLE_FASTJET "Build FastJet Plugin" ON)
 
 include(CheckCXXCompilerFlag)
