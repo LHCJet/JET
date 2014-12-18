@@ -10,6 +10,8 @@ if(FASTJET_FOUND)
     add_executable(fastjet_plugin_example
         example.cpp)
     target_link_libraries(fastjet_plugin_example JETJetPlugin JETJet ${FASTJET_LIBRARIES})
+    install(TARGETS JETJetPlugin DESTINATION ${CMAKE_INSTALL_LIBDIR})
+    install(FILES JETJetPlugin.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jetjet)
 else(FASTJET_FOUND)
     message(STATUS "FastJet not found, plugin will not be built!")
 endif(FASTJET_FOUND)

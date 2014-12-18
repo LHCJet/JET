@@ -9,7 +9,9 @@ endif()
 
 option(JET_ENABLE_FASTJET "Build FastJet Plugin" ON)
 
+include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
+
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 if(COMPILER_SUPPORTS_CXX11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -34,3 +36,8 @@ add_executable(jetjet_example
     src/example.cpp)
 
 target_link_libraries(jetjet_example JETJet)
+
+install(TARGETS JETJet DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+install(FILES src/Vector.h src/JetDefinition.h src/JetFinder.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/jetjet)
