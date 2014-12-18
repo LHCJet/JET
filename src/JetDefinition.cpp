@@ -296,12 +296,12 @@ Vector EConeDefinition::fiducialCenter(const Vector & pt) const
     return pt;
 }
 
-double EConeDefinition::fiducialBoundary(const Vector & pt) const
+double EConeDefinition::fiducialBoundary(const Vector &) const
 {
     return m_cos2th;
 }
 
-double EConeDefinition::coneBoundary(const PArray & center) const
+double EConeDefinition::coneBoundary(const PArray &) const
 {
     return m_b;
 }
