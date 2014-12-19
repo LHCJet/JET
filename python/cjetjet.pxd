@@ -1,7 +1,7 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 
-cdef extern from "../src/Vector.h" namespace "JETJet":
+cdef extern from "Vector.h" namespace "JETJet":
     cdef cppclass Vector:
         Vector()
         Vector(double, double, double, double)
@@ -12,7 +12,7 @@ cdef extern from "../src/Vector.h" namespace "JETJet":
         double jetFunction()
 
 
-cdef extern from "../src/JetDefinition.h" namespace "JETJet":
+cdef extern from "JetDefinition.h" namespace "JETJet":
     cdef cppclass JetDefinition:
         JetDefinition(double)
         string description()
@@ -27,7 +27,7 @@ cdef extern from "../src/JetDefinition.h" namespace "JETJet":
         string description()
 
 
-cdef extern from "../src/JetFinder.h" namespace "JETJet":
+cdef extern from "JetFinder.h" namespace "JETJet":
     cdef cppclass Jet:
         const Vector & jet()
         const vector[uint] & content()
