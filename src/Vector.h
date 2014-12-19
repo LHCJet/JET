@@ -19,6 +19,10 @@ public:
     Vector() :m_p{{0,0,0,0}}, m_p_normalized{{0,0,0,0}}, m_associatedInners{}, m_associatedBoundaries{}, m_discarded(false), m_jetFunction(0) {}
     Vector(const double px, const double py, const double pz, const double E);
     const PArray & fourVector() const {return m_p;}
+    double px() const {return m_p[0];}
+    double py() const {return m_p[1];}
+    double pz() const {return m_p[2];}
+    double E() const {return m_p[3];}
     double pt() const { return sqrt(m_p[0]*m_p[0]+m_p[1]*m_p[1]); }
     double eta() const {
         double pAbs = sqrt(m_p[0]*m_p[0]+m_p[1]*m_p[1]+m_p[2]*m_p[2]);
