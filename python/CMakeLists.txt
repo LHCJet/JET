@@ -5,7 +5,9 @@ find_package(Cython)
 
 if(CYTHON_FOUND)
     include(UseCython)
-    execute_process ( COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    if(NOT PYTHON_SITE_DIR)
+        execute_process ( COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    endif(NOT PYTHON_SITE_DIR)
     message(STATUS "Python module will be installed to:
     ${PYTHON_SITE_DIR}")
     set_source_files_properties(jetjet.pyx PROPERTIES CYTHON_IS_CXX TRUE)
