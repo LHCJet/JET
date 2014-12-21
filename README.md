@@ -4,10 +4,12 @@ An implementation of JET algorithm described in arXiv:1411.3705.
 
 Requirements:
 --------------------------------------------
+```
 CMake > 2.8
 GCC > 4.8 (or other compilers with C++11 support)
 FastJet > 3.0 (optional)
 Cython > 0.2 (optional)
+```
 
 Quick Start:
 --------------------------------------------
@@ -23,7 +25,7 @@ make install
 #The output of jetjet_example uses the same format as print_jets_for_root function in FastJet
 examples/jetjet_example < ../sample/dijet.txt
 # If FastJet plugin is compiled
-examples/fastjet_example < ../sample/ttbar.txt
+examples/fastjet_plugin_example < ../sample/ttbar.txt
 # If Python Module is installed, the script simply print the four momentum of the clustered jets
 python ../examples/python_example.py ../sample/large_eta.txt
 ```
