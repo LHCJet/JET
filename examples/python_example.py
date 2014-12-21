@@ -1,5 +1,6 @@
 import jetjet
 import sys
+import math
 
 particles = []
 
@@ -13,4 +14,6 @@ jet_list = jf.jets()
 
 for j in jet_list:
     v = j.vector
-    print("%f, %f, %f, %f, %f" % (v.px, v.py, v.pz, v.E, j.jet_function))
+    pt = math.sqrt(v.px * v.px + v.py * v.py)
+    if pt > 5:
+        print("%8.5f %8.5f %8.5f %8.5f %8.5f" % (v.px, v.py, v.pz, v.E, j.jet_function))
