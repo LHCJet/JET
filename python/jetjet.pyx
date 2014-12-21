@@ -48,7 +48,7 @@ cdef class jet_finder:
         elif jd == jet_definition.EtAlphaConeDefinition:
             self.jet_definition_ptr = <jj.JetDefinition * >new jj.EtAlphaConeDefinition(alpha, beta)
 
-        print(self.jet_definition_ptr.description())
+        print(self.jet_definition_ptr.description().decode('UTF-8'))
         self.vl = vl
         self.jet_finder_ptr = new jj.JetFinder(particles, self.jet_definition_ptr)
 
