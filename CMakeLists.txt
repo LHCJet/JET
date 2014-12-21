@@ -52,6 +52,7 @@ endif()
 if(HAVE_PYTHON_MODULE)
     add_subdirectory(python)
 endif()
+add_subdirectory(examples)
 #add_definitions(-std=c++11 -DDEBUG -g -ggdb)
 #add_definitions(-std=c++11 -O2 -g -ggdb -DDEBUG -D_USE_MATH_DEFINES -march=native)
 add_definitions(-D_USE_MATH_DEFINES)
@@ -60,11 +61,6 @@ add_library(JETJet SHARED
     src/JetDefinition.cpp
     src/JetFinder.cpp
     src/Vector.cpp)
-
-add_executable(jetjet_example
-    src/example.cpp)
-
-target_link_libraries(jetjet_example JETJet)
 
 install(TARGETS JETJet DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
