@@ -25,6 +25,7 @@ cdef class jet:
     cdef public lorentz_vector vector
     cdef public list particles
     cdef public double jet_function
+
     def __init__(self, v, p, jf):
         self.vector = v
         self.particles = p
@@ -34,17 +35,18 @@ cdef class jet_finder:
     cdef jj.JetFinder * jet_finder_ptr
     cdef jj.JetDefinition * jet_definition_ptr
     cdef list vl
+
     def __cinit__(self, list vl, jd, double beta, double alpha=1.0):
         cdef vector[jj.Vector] particles
         for v in vl:
-            particles.push_back(jj.Vector(v.px,v.py,v.pz,v.p_abs()))
+            particles.push_back(jj.Vector(v.px, v.py, v.pz, v.p_abs()))
 
         if jd == jet_definition.EConeDefinition:
-            self.jet_definition_ptr = <jj.JetDefinition *>new jj.EConeDefinition(beta)
+            self.jet_definition_ptr = <jj.JetDefinition * >new jj.EConeDefinition(beta)
         elif jd == jet_definition.EtConeDefinition:
-            self.jet_definition_ptr = <jj.JetDefinition *>new jj.EtConeDefinition(beta)
+            self.jet_definition_ptr = <jj.JetDefinition * >new jj.EtConeDefinition(beta)
         elif jd == jet_definition.EtAlphaConeDefinition:
-            self.jet_definition_ptr = <jj.JetDefinition *>new jj.EtAlphaConeDefinition(alpha,beta)
+            self.jet_definition_ptr = <jj.JetDefinition * >new jj.EtAlphaConeDefinition(alpha, beta)
 
         print self.jet_definition_ptr.description()
         self.vl = vl
@@ -55,7 +57,7 @@ cdef class jet_finder:
         jet_list = []
         for i in range(cjets.size()):
             v = cjets[i].jet()
-            jet_v = lorentz_vector(v.px(),v.py(),v.pz(),v.E())
+            jet_v = lorentz_vector(v.px(), v.py(), v.pz(), v.E())
             indices = cjets[i].content()
             jet_p = []
             for j in indices:

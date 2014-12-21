@@ -23,7 +23,7 @@ cdef extern from "JetDefinition.h" namespace "JETJet":
         EtConeDefinition(double)
         string description()
     cdef cppclass EtAlphaConeDefinition:
-        EtAlphaConeDefinition(double,double)
+        EtAlphaConeDefinition(double, double)
         string description()
 
 
@@ -35,4 +35,3 @@ cdef extern from "JetFinder.h" namespace "JETJet":
     cdef cppclass JetFinder:
         JetFinder(vector[Vector] & particles, JetDefinition * jetDefinition)
         vector[Jet] jets()
-
