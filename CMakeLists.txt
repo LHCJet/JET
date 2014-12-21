@@ -4,6 +4,7 @@ set(JET_VERSION_MAJOR 0)
 set(JET_VERSION_MINOR 2)
 set(JET_VERSION "${JET_VERSION_MAJOR}.${JET_VERSION_MINOR}" )
 
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -11,9 +12,7 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 endif()
 
-option(JET_ENABLE_FASTJET "Build FastJet Plugin" ON)
-option(JET_ENABLE_PYTHON "Build Python Module" ON)
-
+include(Summary)
 include(GNUInstallDirs)
 include(CheckCXXCompilerFlag)
 
@@ -23,6 +22,10 @@ if(COMPILER_SUPPORTS_CXX11)
 else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
+
+find_package(FastJet)
+find_package(Cython)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 
 list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_FULL_LIBDIR}" _isSystemPlatformLibDir)
@@ -36,12 +39,19 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-if(JET_ENABLE_FASTJET)
+optional_component(FASTJET_PLUGIN ON "FastJet Plugin"
+    DEPENDS "FastJet" FASTJET_FOUND)
+
+optional_component(PYTHON_MODULE ON "Python Module"
+    DEPENDS "Cython" CYTHON_FOUND)
+
+
+if(HAVE_FASTJET_PLUGIN)
     add_subdirectory(fastjet)
-endif(JET_ENABLE_FASTJET)
-if(JET_ENABLE_PYTHON)
+endif()
+if(HAVE_PYTHON_MODULE)
     add_subdirectory(python)
-endif(JET_ENABLE_PYTHON)
+endif()
 #add_definitions(-std=c++11 -DDEBUG -g -ggdb)
 #add_definitions(-std=c++11 -O2 -g -ggdb -DDEBUG -D_USE_MATH_DEFINES -march=native)
 add_definitions(-D_USE_MATH_DEFINES)
@@ -67,3 +77,4 @@ configure_file(
     IMMEDIATE @ONLY)
 add_custom_target(uninstall
     "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+summary_show()
