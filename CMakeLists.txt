@@ -1,5 +1,9 @@
 cmake_minimum_required (VERSION 2.8.5 FATAL_ERROR)
 project (JETJet)
+set(JET_VERSION_MAJOR 0)
+set(JET_VERSION_MINOR 2)
+set(JET_VERSION "${JET_VERSION_MAJOR}.${JET_VERSION_MINOR}" )
+
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
