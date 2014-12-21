@@ -1,0 +1,1 @@
+#define JET_VERSION "${JET_VERSION}"

@@ -57,6 +57,9 @@ add_subdirectory(examples)
 #add_definitions(-std=c++11 -O2 -g -ggdb -DDEBUG -D_USE_MATH_DEFINES -march=native)
 add_definitions(-D_USE_MATH_DEFINES)
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
+
 add_library(JETJet SHARED
     src/JetDefinition.cpp
     src/JetFinder.cpp

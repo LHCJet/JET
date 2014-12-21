@@ -3,6 +3,7 @@
 
 #include "JetDefinition.h"
 #include "Debug.h"
+#include "config.h"
 #include <numeric>
 #include <algorithm>
 #include <functional>
@@ -20,7 +21,7 @@ JetDefinition::JetDefinition(double beta)
         DEBUG_MSG("beta is too small:" << beta << ", set it to 1.");
     }
     std::cout << "================================================================================" << std::endl;
-    std::cout << "==   JETJet: Implementation of JET algorithms described in arXiv: 1411.3705   ==" << std::endl;
+    std::cout << "== JETJet " << JET_VERSION << ": Implementation of JET algorithms described in arXiv: 1411.3705 ==" << std::endl;
     std::cout << "================================================================================" << std::endl;
     std::cout << std::endl;
 }
