@@ -22,11 +22,13 @@ cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 make
 # Optional. Install the libraries and headers
 make install
-#The output of jetjet_example uses the same format as print_jets_for_root function in FastJet
+# The output of jetjet_example uses the same format as print_jets_for_root
+# function in FastJet
 examples/jetjet_example < ../sample/dijet.txt
 # If FastJet plugin is compiled
 examples/fastjet_plugin_example < ../sample/ttbar.txt
-# If Python Module is installed, the script simply print the four momentum and the value of the jet function of the clustered jets
+# If Python Module is installed, the script simply print the four momentum and
+# the value of the jet function of the clustered jets
 python ../examples/python_example.py ../sample/large_eta.txt
 ```
 
