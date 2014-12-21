@@ -13,4 +13,4 @@ jet_list = jf.jets()
 
 for j in jet_list:
     v = j.vector
-    print "%f, %f, %f, %f, %f" % (v.px, v.py, v.pz, v.E, j.jet_function)
+    print("%f, %f, %f, %f, %f" % (v.px, v.py, v.pz, v.E, j.jet_function))

@@ -2,7 +2,7 @@ include_directories("${CMAKE_SOURCE_DIR}/src")
 
 include(UseCython)
 if(NOT PYTHON_SITE_DIR)
-    execute_process ( COMMAND python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process ( COMMAND python -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())" OUTPUT_VARIABLE PYTHON_SITE_DIR OUTPUT_STRIP_TRAILING_WHITESPACE)
 endif(NOT PYTHON_SITE_DIR)
 message(STATUS "Python module will be installed to:
 ${PYTHON_SITE_DIR}")
