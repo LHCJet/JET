@@ -52,6 +52,9 @@ cdef class jet_finder:
         self.vl = vl
         self.jet_finder_ptr = new jj.JetFinder(particles, self.jet_definition_ptr)
 
+    def __dealloc__(self):
+        del self.jet_finder_ptr
+
     def jets(self):
         cjets = self.jet_finder_ptr.jets()
         jet_list = []
